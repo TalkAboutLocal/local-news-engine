@@ -1,0 +1,51 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><h5><b> <a href="#" data-toggle="modal" data-source-type="All" data-name-index="{{index}}" data-target="#modal-for-name">  {{ name|title }}  </a></b> {% if info.fuzzy_names|length %} 
+    <span class="text-danger margin-left-10"> Matched Names: </span> {{info.fuzzy_names|join(", ")|title}}   {% endif %} </h5>
+
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-4">
+            <h5> 
+              <strong> Total Appearances </strong> <span class="margin-left-10">
+                <a href="#" data-toggle="modal" data-source-type="All" data-name-index="{{index}}" data-target="#modal-for-name">{{info.total_sources}}</a>
+              </span>
+            </h5>
+          </div>
+
+          {% for key, value in info.counted_source %}
+            <div class="col-md-4">
+              <h5> 
+                <strong>{{key}}</strong> 
+                <span class="margin-left-10">
+                  <a href="#" data-toggle="modal" data-source-type="{{key}}" data-name-index="{{index}}" data-target="#modal-for-name">{{value}}</a>
+                </span>
+              </h5>
+            </div>
+          {% endfor%}
+        </div>
+      </div>
+      <div class="col-md-12">
+        <h4 class="text-muted"><b>Latest Appearance: {{values[0].source}}</b> {{ values[0].data._recency.substring(0,10) }}</h4>
+        <dl class="dl-horizontal">
+
+          {% for term, definition in values[0].data|dictsort %}
+            {% if term[0] != "_" and term != "Done" and definition %}
+               <dt>{{term}}</dt> 
+               <dd>
+                   {% set definition_string = definition|string %}
+                   {% if definition_string.substring(0,4) == 'http' %}
+                     <a href="{{definition}}">{{definition}}</a>
+                   {% else %}
+                     {{definition}}
+                   {% endif %}
+               </dd>
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

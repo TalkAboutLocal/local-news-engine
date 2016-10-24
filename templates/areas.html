@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="#">Local News Engine</a>
+  </div>
+</nav>
+
+
+<div class="container-fluid">
+  {% for item in area_matches[:1000] %}
+    <div class="panel panel-default">
+      <div class="panel-heading"><h4><b>{{item._source}}</b> {% if item._recency %} {{ item._recency[:10] }} {% endif %}</h4></div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          {%- for key, value in item.items()|sort -%}
+            {%- if not key.startswith("_") and key not in ["Done"] -%}
+              <dt>{{key}}</dt> 
+              <dd>
+                {%- if value is string -%}
+                   {{" ".join(value.split())}}
+                {%- elif value is sequence -%}
+                   {{" ".join(", ".join(value).split())}}
+                {%- else -%}
+                   {{value}}
+                {%- endif -%}
+              </dd>
+            {%- endif -%}
+          {%- endfor -%}
+        </dl>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

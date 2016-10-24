@@ -1,0 +1,19 @@
+{
+  "name": "local-news-engine",
+  "version": "0.0.1",
+  "description": "Javascript for LNE",
+  "main": "templates.js",
+  "dependencies": {
+    "nunjucks": "^2.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@opendataservices.plan.io:standardsupport-local-news-engine.git"
+  },
+  "author": "Open Data Services",
+  "license": "AGPL"
+}

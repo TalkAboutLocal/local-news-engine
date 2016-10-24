@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title" id="myModalLabel">Appearances for {{name|title}}  
+    {% if source_type != "All" %} for {{source_type}} {% endif %}
+  </h4>
+</div>
+{% for item in values %}
+  {% if source_type == "All" or source_type == item.source %}
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4><b>{{item.source}}</b> {% if item.data._recency %} {{ item.data._recency.substring(0,10) }} {% endif %}</h4></div>
+    <div class="panel-body">
+      <dl class="dl-horizontal">
+        {% for term, definition in item.data|dictsort %}
+          {% if term[0] != "_" and term != "Done" and definition %}
+             <dt>{{term}}</dt> 
+             <dd>
+               {% set definition_string = definition|string %}
+               {% if definition_string.substring(0,4) == 'http' %}
+                 <a href="{{definition}}">{{definition}}</a>
+               {% else %}
+                 {{definition}}
+               {% endif %}
+             </dd>
+          {% endif %}
+        {% endfor %}
+      </dl>
+    </div>
+  </div>
+  {% endif %}
+{% endfor %}

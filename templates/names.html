@@ -1,0 +1,85 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="#">Local News Engine</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div id="main">
+  </div>
+  <nav aria-label="...">
+    <ul class="pager">
+      <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span>Previous</a></li>
+      <li class="next"><a href="#1">Next<span aria-hidden="true">&rarr;</span></a></li>
+    </ul>
+  </nav>
+</div>
+
+
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="modal-for-name" tabindex="-1" role="dialog" aria-labelledby="{{name}}">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+        <script>
+            interesting_names = {{interesting_names_json|safe}}
+            $(function () {
+
+              var rerender = function() {
+                var hash = window.location.hash;
+                var page_number = 0  
+                if (hash) {
+                  page_number = parseInt(hash.substring(1)) 
+                }
+                if (isNaN(page_number)) {
+                  page_number = 0
+                }
+
+                $("#main").empty()
+                $("#modals").empty()
+                $(window).scrollTop(0)
+
+                for (var i = page_number*50; i < (page_number*50 + 50); i++) {
+                  var res = nunjucks.render('name.html', {"name": interesting_names[i][1], "values": interesting_names[i][2], "info": interesting_names[i][3], "index": i});
+                  $("#main").append(res)
+                }
+                $(".pager .previous a").attr({"href": "#" + (page_number - 1)})
+                $(".pager .next a").attr({"href": "#" + (page_number + 1)})
+                if (page_number == 0) {
+                  $(".pager .previous").addClass("disabled")
+                } else {
+                  $(".pager .previous").removeClass("disabled")
+                }
+              }
+              window.onhashchange = rerender
+              rerender()
+
+              $('#modal-for-name').on('show.bs.modal', function (event) {
+                var link = $(event.relatedTarget) // Button that triggered the modal
+                var name_index = link.data('name-index') // Extract info from data-* attributes
+                var source_type = link.data('source-type') // Extract info from data-* attributes
+                var modal = $(this)
+                var res = nunjucks.render('name_modal.html', {"name": interesting_names[name_index][1], 
+                                                              "values": interesting_names[name_index][2], 
+                                                              "info": interesting_names[name_index][3],
+                                                              "source_type": source_type});
+                modal.find('.modal-content')[0].innerHTML = res
+
+              })
+
+            })
+            
+        </script>
+{% endblock %}

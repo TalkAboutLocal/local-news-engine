@@ -1,0 +1,9 @@
+lxml
+pyparsing
+requests
+cssselect
+bs4
+nltk
+numpy
+Jinja2
+

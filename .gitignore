@@ -1,0 +1,6 @@
+__pycache__
+node_modules
+courts.*
+courts_data/*
+data/*
+
