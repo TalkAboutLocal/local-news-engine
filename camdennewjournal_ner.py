@@ -9,21 +9,22 @@ from collections import defaultdict
 
 Some setup is required to run this script:
 
-Mirror the site with wget:
-wget -m "http://www.camdennewjournal.com/" -X sites 
+Mirror the site with wget (warning this will take hours):
+```
+# Remove any files that already exist
+rm -r data/www.camdennewjournal.com
+time wget -m "http://www.camdennewjournal.com/" -X sites -P data --restrict-file-names=nocontrol --accept-regex='^http://www.camdennewjournal.com/[^/]*[^\?]*$' 2> data/wget.log
+```
 
-Download nltk data:
-Open up a python prompt and:
-import nltk
-nltk.download()
-d
-punkt
-d
-averaged_perceptron_tagger
-d
-maxent_ne_chunker
-d
-words
+-X sites
+    Exclude anythign under /sites/ - this avoids downloading images/CSS/JS
+-P data
+    Place the downloaded files in the data/ directory
+--restrict-file-names=nocontrol
+    We need this for wget to save UTF-8 filenames properly
+--accept-regex
+    This has a regex to allow http://www.camdennewjournal.com/news?page=1 but not http://www.camdennewjournal.com/news/thisshouldreally404?page=1
+
 
 
 """
@@ -59,11 +60,20 @@ def write_json(entity_names):
     with open('data/saved_camdennewjournal_entities.json', 'w') as fp:
         json.dump(entity_names, fp, default=json_set_default, indent=4, sort_keys=True)
 
+
+# Download required nltk data
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
+
+
+
 entity_names = defaultdict(set)
 i = 0
 
 
-for fname in glob.glob('./www.camdennewjournal.com/**', recursive=True):
+for fname in glob.glob('./data/www.camdennewjournal.com/**', recursive=True):
     if os.path.isdir(fname):
         continue
     try:

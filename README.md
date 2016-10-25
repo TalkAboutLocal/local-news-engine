@@ -47,6 +47,10 @@ wget https://opendata.camden.gov.uk/resource/mcgw-i4rx.json
 cd ..
 ```
 
+### Camden New Journal entity recognition
+
+See the top of [camdennewjournal_ner.py](camdennewjournal_ner.py).
+
 
 ## Processing The data
 
