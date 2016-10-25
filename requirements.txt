@@ -6,4 +6,5 @@ bs4
 nltk
 numpy
 Jinja2
+python-dateutil
 
