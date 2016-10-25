@@ -46,7 +46,7 @@ def parse_court_docs(data):
 
         if item.getName() == "main_body":
             if item[0]:
-                current_case_data["rest_case_data"] += item[0]
+                current_case_data["rest_case_data"] += "\n" + item[0]
 
     current_case_data.update(parse_rest_case_data(current_case_data["rest_case_data"]))
     current_case_data.update(extra_info_from_case_data(current_case_data["rest_case_data"]))
