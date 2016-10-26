@@ -95,7 +95,7 @@ def parse_first_case_line(first_case_line):
         p.SkipTo(p.White(" ", min=10) ^ gender).setResultsName("name"),
         p.Optional(gender),
         p.Optional(dob),
-	p.Optional(linked_case),
+        p.Optional(linked_case),
         p.Optional(provisional),
         p.Word(p.nums),
     ])
