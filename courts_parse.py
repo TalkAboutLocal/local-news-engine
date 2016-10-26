@@ -82,17 +82,26 @@ def parse_heading_block(heading_block):
 
 
 def parse_first_case_line(first_case_line):
+    import pprint
+    pprint.pprint(first_case_line)
     data = {"case_order": first_case_line[0]}
 
     gender = p.Suppress(p.Literal("(")) + p.Word(p.alphas, exact=1).setResultsName("gender") + p.Suppress(p.Literal(")"))
 
     dob = p.Suppress(p.Literal("DOB:")) + date.setResultsName("dob") + p.Suppress(p.Literal("Age:")) + p.Word(p.nums).setResultsName("age")
 
+    linked_case = p.Suppress(p.Literal("LINKED CASE"))
+    provisional = p.Suppress(p.Literal("PROVISIONAL"))
+
     first_case_line_detail = p.And([
-        p.SkipTo(gender).setResultsName("name"),
-        gender,
+        #p.Regex(r"([a-zA-Z0-9\ \-]{1,100})").setResultsName("name"),
+        p.SkipTo(p.White(" ", min=10) ^ gender).setResultsName("name"),
+        p.Optional(gender),
         p.Optional(dob),
-        p.Optional(p.Word(p.alphas)).setResultsName("extra_first_line"),
+	p.Optional(linked_case),
+        p.Optional(provisional),
+        #p.Optional(p.Combine(p.OneOrMore(p.Word(p.alphas))).setResultsName("extra_first_line")),
+        #p.Optional(p.SkipTo(p.nums)).setResultsName("first_line_extras"),
         p.Word(p.nums),
     ])
     
