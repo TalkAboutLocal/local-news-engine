@@ -101,10 +101,7 @@ def parse_first_case_line(first_case_line):
     ])
     
     for key, value in first_case_line_detail.parseString(first_case_line[1]).asDict().items():
-        if key == "name":
-            data['name'] = value[0].strip()
-        else:
-            data[key] = value.strip()
+    	data[key] = value.strip()
 
     return data
 
@@ -151,7 +148,17 @@ if __name__ == '__main__':
         data = doc.read()
         parsed = parse_court_docs(data)
 
+    safe_output = []
+
+    # Remove juveniles before writing out
+    for case in parsed:
+        if 'age' in case.keys():
+            if int(case['age']) >= 18:
+                safe_output.append(case)
+        elif 'LJA' != "North London Youth Court":
+            safe_output.append(case)
+
     with open("courts_data/courts.json", "w+") as output:
-        json.dump(parsed, output, indent=4)
+        json.dump(safe_output, output, indent=4)
 
 
