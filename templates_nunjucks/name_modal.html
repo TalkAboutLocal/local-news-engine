@@ -15,7 +15,7 @@
              <dt>{{term}}</dt> 
              <dd>
                {% set definition_string = definition|string %}
-               {% if definition_string.substring(0,4) == 'http' %}
+               {% if definition_string and definition_string.substring(0,4) == 'http' %}
                  <a href="{{definition}}">{{definition}}</a>
                {% else %}
                  {{definition}}
