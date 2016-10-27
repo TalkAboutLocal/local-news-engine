@@ -35,6 +35,10 @@ PAGE_SIZE = 50
 
 interesting_names = {{interesting_names_json|safe}};
 source_counter = {};
+ward_counter = {};
+
+var t0 = performance.now();
+
 interesting_names.forEach(function(item) {
   Object.keys(item[3].counted_source).some(function(source) {
     if (!source_counter[source]) {
@@ -42,11 +46,27 @@ interesting_names.forEach(function(item) {
     }
     source_counter[source] += 1;
   })
+  item[3].wards = {}
+  item[2].forEach(function(appearance) {
+    wards = appearance.data._wards || []
+    wards.forEach(function (ward) {
+      if (!ward_counter[ward]) {
+        ward_counter[ward] = 0;
+      }
+      ward_counter[ward] += 1;
+      item[3].wards[ward] = true
+    })
+  })
 })
+
+var t1 = performance.now();
+console.log("Summary took " + (t1 - t0) + " milliseconds.")
+console.log(ward_counter)
 
 function name_search(query) {
   var results = [];
   var sources = query.sources || Object.keys(source_counter);
+  var wards = query.wards || Object.keys(ward_counter);
   var name_search = query.name_search || "";
   var names = [];
   if (name_search) {
@@ -60,6 +80,9 @@ function name_search(query) {
   interesting_names.some(function(item, index) {
     in_sources = Object.keys(item[3].counted_source).some(function(source) {
       return sources.indexOf(source) !== -1
+    })
+    in_wards = Object.keys(item[3].wards).some(function(ward) {
+      return wards.indexOf(ward) !== -1
     })
 
     // Remove sources
@@ -80,7 +103,7 @@ function name_search(query) {
       })
     }
 
-    if (in_sources && found) {
+    if (in_sources && in_wards && found) {
       item[3].index = index
       results.push(item)
     }
@@ -124,8 +147,10 @@ $(function () {
     var t0 = performance.now();
     results = name_search(fragment_obj)
     var t1 = performance.now();
-    console.log("Search took " + (t1 - t0) + " milliseconds.")
+    console.log("Search took " + (t1 - t0) + " milliseconds.");
 
+
+    $("#main").append('<h4 class="heading-in-panel"> Matches ' + results.length + '</h4>')
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
       var res = nunjucks.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index});
       $("#main").append(res)
@@ -148,7 +173,7 @@ $(function () {
   }
 
   var fragment_obj = get_fragment_obj()
-  var res = nunjucks.render('sidebar.html', {"source_counter": source_counter, "fragment_obj": fragment_obj});
+  var res = nunjucks.render('sidebar.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
   $("#sidebar").append(res)
 
   window.onhashchange = rerender
@@ -182,7 +207,7 @@ $(function () {
   })
 
 
-  $('#name-search').on('keyup', function (event) {
+  $('#name-search').on('input', function (event) {
     var fragment_obj = get_fragment_obj()
     fragment_obj.name_search = $('#name-search').val()
     fragment_obj.page = 0
@@ -201,6 +226,13 @@ $(function () {
     $('#name-search').val("")
     fragment_obj.name_search = ""
     fragment_obj.page = 0
+    var uri = URI('#').fragment(fragment_obj).toString();
+    window.location.hash = uri
+  })
+  $('#wards select').on('changed.bs.select', function (e) {
+    var fragment_obj = get_fragment_obj()
+    var value = $('#wards select').val() || []
+    fragment_obj.wards = value
     var uri = URI('#').fragment(fragment_obj).toString();
     window.location.hash = uri
   })
