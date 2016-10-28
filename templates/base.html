@@ -19,8 +19,27 @@
           .panel {
             overflow: hidden
           }
+          .heading-in-panel {
+            margin-top: 0px
+          }
+          .checkbox-large-label {
+            font-size: 16px
+          }
+          .overflow {
+            overflow: inherit
+          }
+          #clear-name-search {
+            position: relative;
+            right: 8px;
+            float: right;
+            top: -32px;
+            font-size: 22px;
+            color: #AAA;
+            cursor: pointer;
+          }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/sandstone/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -29,10 +48,11 @@
         {% block content %}
         {% endblock %}
 
-        <script
-			  src="https://code.jquery.com/jquery-2.2.4.js"
-			  crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.2/URI.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.2/URI.fragmentQuery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
         <script>
           {{ templates|safe }}
         </script>
