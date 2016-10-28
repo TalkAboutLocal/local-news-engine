@@ -2,6 +2,8 @@ import os
 import glob
 import nltk
 import json
+import calendar
+import dateutil.parser
 import lxml.html as html
 from collections import defaultdict
 
@@ -69,7 +71,7 @@ nltk.download('words')
 
 
 
-entity_names = defaultdict(set)
+entity_names = defaultdict(list)
 i = 0
 
 
@@ -83,10 +85,28 @@ for fname in glob.glob('./data/www.camdennewjournal.com/**', recursive=True):
         continue
     content = doc.find('//div[@class="node"]/div[@class="content"]')
     if content is not None:
+        date = None
+        # Looks like Camden New journal manually adds these dates to the text
+        # of the article. Looking for <strong> and <b> catches most of them,
+        # but because it was added manually, some will be missed.
+        date_block = content.find('.//strong')
+        if date_block is None:
+            date_block = content.find('.//b')
+        if date_block is not None:
+            try:
+                date = dateutil.parser.parse(date_block.text_content(), fuzzy=True)
+            except (calendar.IllegalMonthError, ValueError):
+                pass
+        else:
+            print('No date found on {}'.format(fname))
+
         i += 1
         text = content.text_content()
         for name in extract_entity_names_from_text(text):
-            entity_names[name].add(fname)
+            entity_names[name].append({
+                'link': fname.replace('./data/', 'http://'),
+                '_recency': date.isoformat() if date else None
+            })
         if i % 1000 == 0:
             print('writing intermediate json')
             write_json(entity_names)
