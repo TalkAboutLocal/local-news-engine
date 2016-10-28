@@ -66,7 +66,7 @@ console.log(ward_counter)
 function name_search(query) {
   var results = [];
   var sources = query.sources || Object.keys(source_counter);
-  var wards = query.wards || Object.keys(ward_counter);
+  var wards = query.wards || [];
   var name_search = query.name_search || "";
   var names = [];
   if (name_search) {
@@ -84,6 +84,9 @@ function name_search(query) {
     in_wards = Object.keys(item[3].wards).some(function(ward) {
       return wards.indexOf(ward) !== -1
     })
+    if (wards.length === 0) {
+      in_wards = true
+    }
 
     // Remove sources
     //var number_of_sources = 0
