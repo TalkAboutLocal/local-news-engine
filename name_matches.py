@@ -52,10 +52,20 @@ for key, value in all_names.items():
         recency = item
 
     if len(distinct_data_sources) > 1 or (distinct_name_sources and distinct_data_sources):
-        interesting_names.append((value[0].get('data', {}).get("_recency",""), key, value, info))
+        key_fields = {}
+        with open("key_field_names.txt") as key_field_names:
+            for key_field_name in key_field_names:
+                field_name = key_field_name.strip()
+                try:
+                    key_fields[field_name] = value[0]['data'][field_name]
+                except KeyError:
+                    pass
+
+        interesting_names.append((value[0].get('data', {}).get("_recency",""), key, value, info, key_fields ))
 
 
 interesting_names.sort(reverse=True)
+
 
 with open("processed/interesting_names.json", "w+") as interesting_names_file:
     json.dump(interesting_names, interesting_names_file, indent=2)

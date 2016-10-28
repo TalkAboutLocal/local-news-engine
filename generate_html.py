@@ -20,4 +20,3 @@ with open("processed/interesting_names.json") as interesting_names_file:
 with open('output/names.html', 'w+') as name_output:
     name_output.write(names_template.render(templates=templates, interesting_names=interesting_names, interesting_names_json=json.dumps(interesting_names)))
 
-

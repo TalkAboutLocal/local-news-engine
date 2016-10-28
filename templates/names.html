@@ -155,7 +155,7 @@ $(function () {
 
     $("#main").append('<h4 class="heading-in-panel"> Matches ' + results.length + '</h4>')
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
-      var res = nunjucks.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index});
+      var res = nunjucks.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index, "key_fields": results[i][4]});
       $("#main").append(res)
     }
 
@@ -191,6 +191,7 @@ $(function () {
     var res = nunjucks.render('name_modal.html', {"name": interesting_names[name_index][1], 
                                                   "values": interesting_names[name_index][2], 
                                                   "info": interesting_names[name_index][3],
+                                                  "key_fields": interesting_names[name_index][4],
                                                   "source_type": source_type});
     modal.find('.modal-content')[0].innerHTML = res
   })
