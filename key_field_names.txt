@@ -1,0 +1,14 @@
+"address"
+age
+name
+rest_case_data
+gender
+Agent
+Application Type
+Current Status
+Decision
+Determination Level
+Development Description
+Status
+Proposal
+Wards
