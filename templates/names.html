@@ -192,6 +192,8 @@ $(function () {
     // Track a fake url for this page in piwik
     _paq.push(['setCustomUrl', 'local://names.html/' + search_slug + '/' + wards_slug + '/' + sources_slug + '/page=' + current_page]);
     _paq.push(['trackPageView']);
+    // Track content impressions
+    _paq.push(['trackAllContentImpressions']);
   }
 
   var fragment_obj = get_fragment_obj()

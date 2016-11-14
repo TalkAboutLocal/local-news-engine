@@ -1,5 +1,18 @@
 <div class="panel panel-default">
-  <div class="panel-heading"><h5><b> <a href="#" data-toggle="modal" data-source-type="All" data-name-index="{{index}}" data-target="#modal-for-name">  {{ name|title }}  </a></b> {% if info.fuzzy_names|length %} 
+  <div class="panel-heading"><h5><b>
+    <!-- attrs containing 'content' are for piwik tracking -->
+    <a
+        href="#"
+        data-track-content
+        data-content-name="{{ values[0].data._recency.substring(0,10) }} {{values[0].source}}"
+        data-content-piece="{{ values[0].data._recency.substring(0,10) }} {{values[0].source}}"
+        data-content-target="local://noinfo"
+        data-toggle="modal"
+        data-source-type="All"
+        data-name-index="{{index}}"
+        data-target="#modal-for-name">
+      {{ name|title }}
+    </a></b> {% if info.fuzzy_names|length %} 
     <span class="text-danger margin-left-10"> Matched Names: </span> {{info.fuzzy_names|join(", ")|title}}   {% endif %} </h5>
 
   </div>
