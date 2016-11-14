@@ -173,8 +173,24 @@ $(function () {
     var res = nunjucks.render('pager.html', context);
     $("#main").append(res)
 
+
+    if (fragment_obj.sources === undefined) {
+        var search_slug = 'nosearch';
+    } else {
+        var search_slug = 'search';
+    }
+    if (fragment_obj.wards === undefined) {
+        var wards_slug = '_';
+    } else {
+        var wards_slug = fragment_obj.wards.join();
+    }
+    if (fragment_obj.sources === undefined) {
+        var sources_slug = '_';
+    } else {
+        var sources_slug = fragment_obj.sources.join();
+    }
     // Track a fake url for this page in piwik
-    _paq.push(['setCustomUrl', 'local://names.html/page=' + current_page]);
+    _paq.push(['setCustomUrl', 'local://names.html/' + search_slug + '/' + wards_slug + '/' + sources_slug + '/page=' + current_page]);
     _paq.push(['trackPageView']);
   }
 
