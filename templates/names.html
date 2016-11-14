@@ -217,6 +217,17 @@ $(function () {
                                                   "key_fields": interesting_names[name_index][4],
                                                   "source_type": source_type});
     modal.find('.modal-content')[0].innerHTML = res
+    _paq.push(['trackEvent', 'modal', 'show'])
+  })
+  $('#modal-for-name').on('hide.bs.modal', function (event) {
+    _paq.push(['trackEvent', 'modal', 'hide'])
+  })
+
+  $('.full_record').on('show.bs.collapse', function (event) {
+    _paq.push(['trackEvent', 'full_record', 'show'])
+  })
+  $('.full_record').on('hide.bs.collapse', function (event) {
+    _paq.push(['trackEvent', 'full_record', 'hide'])
   })
 
   $('.source-checkbox').on('change', function (event) {
