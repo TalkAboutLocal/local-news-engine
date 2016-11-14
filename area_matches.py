@@ -1,8 +1,8 @@
 import json
 
-postcode_districts_of_interest = ["N1", "N7", "WC1", "NW1", "CM22"]
+postcode_districts_of_interest = ["N1", "N7", "WC1", "NW1"]
 
-area_of_intrest = ["islington", "camden"]
+area_of_interest = ["islington", "camden"]
 
 from load_and_normalize_data import all_data
 
@@ -20,7 +20,7 @@ for row in all_data:
 
     all_string = " ".join(value for value in row.values() if isinstance(value, str) and not value.startswith('http'))
 
-    for area in area_of_intrest:
+    for area in area_of_interest:
         if area in all_string:
             matches.append(row)
 
