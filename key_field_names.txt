@@ -1,0 +1,72 @@
+# Courts Data
+address
+age
+name
+rest_case_data
+gender
+# Camden Planning
+applicant_name
+application_type
+comment
+decision_type
+decision_level
+development_address
+development_description
+registered_date
+responsibility_type
+system_status
+ward
+# Camden Licensing
+Applicant
+Application Date
+Correspondant
+Expiry date
+Granted/Refused date
+Interested Parties
+Objections Received
+Premises address
+Premises name
+RelatedLicenses
+Status
+Ward
+# Islington Planning
+Agent
+Appeal Submitted?
+Applicant
+Application Type
+Current Status
+Decision
+Development Description
+Proposal
+Site Address
+Status
+Wards
+# Islington Licensing - all
+Activities
+Applicant
+Date
+Expiry
+Description
+License Type
+Manager
+Location/Name
+# Islington Licensing - bar / retail type
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+Sunday
+Status
+Transaction
+License for
+# Islington Licensing - HMO type
+Floors in Property
+Kitchens
+Max Households
+Max Number
+Max Persons
+Sinks
+Toilets & Wash Basins
+Living Accomodation

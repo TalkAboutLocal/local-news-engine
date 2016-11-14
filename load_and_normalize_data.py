@@ -4,11 +4,25 @@ from dateutil import parser
 import datetime
 import requests
 from collections import defaultdict
+import gzip
 
 import re
 postcode_re = "((GIR|[A-Za-z][0-9][0-9]?|[A-Za-z][A-Za-z][0-9][0-9]?|[A-Za-z][0-9][A-Za-z]|[A-Za-z][A-Za-z][0-9][A-Za-z])[ ]?([0-9][A-Za-z]{2}))"
 
 postcode_re_just_letter = "[A-Za-z][A-Za-z][0-9][A-Za-z]"
+postcode_to_ward = {}
+
+with open('data/codelist.csv') as codelist, gzip.open('data/codepoint_with_heading.csv.gz', 'rt') as codepoint:
+    codelist_csv = csv.DictReader(codelist)
+    code_to_name = {}
+    for row in codelist_csv:
+        code_to_name[row['code']] = row['name']
+    codepoint_csv = csv.DictReader(codepoint)
+    for row in codepoint_csv:
+        ward_code = row['Admin_ward_code']
+        ward_name = code_to_name.get(ward_code, '')
+        postcode_to_ward[row['Postcode'].replace(' ', '').upper()] = ward_name
+
 
 def clean_name(name):
     name = name.lower()
@@ -34,6 +48,14 @@ def find_postcodes(data):
         postcodes.append(postcode_object)
     return postcodes
 
+def find_wards(postcodes):
+    wards = []
+    for postcode in postcodes:
+        normalized_postcode = postcode.replace(' ', '').upper()
+        ward = postcode_to_ward.get(normalized_postcode)
+        if ward:
+            wards.append(ward)
+    return wards
 
 
 def load_courts_data():
@@ -50,6 +72,7 @@ def load_courts_data():
             row["_postcode_districts"].update(item['district_postcode'])
         row['_postcodes'] = list(row['_postcodes'])
         row["_postcode_districts"] = list(row["_postcode_districts"])
+        row["_wards"] = find_wards(row['_postcodes'])
         row["_names"] = [clean_name(row["name"])]
         row["_recency"] = parser.parse(row['date'], dayfirst=True).isoformat()
         row["_source"] = "Courts"
@@ -72,6 +95,7 @@ def load_camden_planning_data():
 
         row['_postcodes'] = list(row['_postcodes'])
         row["_postcode_districts"] = list(row["_postcode_districts"])
+        row["_wards"] = find_wards(row['_postcodes'])
         row["_source"] = "Camden Planning"
         row["_source_type"] = "Planning"
 
@@ -101,6 +125,7 @@ def load_camden_license_data():
                 row["_postcode_districts"].update(item['district_postcode'])
         row['_postcodes'] = list(row['_postcodes'])
         row["_postcode_districts"] = list(row["_postcode_districts"])
+        row["_wards"] = find_wards(row['_postcodes'])
 
         row["_source"] = "Camden License"
         row["_source_type"] = "License"
@@ -145,6 +170,7 @@ def load_islington_planning_data():
 
         row['_postcodes'] = list(row['_postcodes'])
         row["_postcode_districts"] = list(row["_postcode_districts"])
+        row["_wards"] = find_wards(row['_postcodes'])
         row["_source"] = "Islington Planning"
         row["_source_type"] = "Planning"
 
@@ -186,6 +212,7 @@ def load_islington_license_data():
         row["_postcode_districts"] = list(row["_postcode_districts"])
         row["_source"] = "Islington License"
         row["_source_type"] = "License"
+        row["_wards"] = find_wards(row['_postcodes'])
 
         applicant_name = row.get('Applicant')
         if applicant_name:

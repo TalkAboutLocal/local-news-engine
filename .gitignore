@@ -3,4 +3,5 @@ node_modules
 courts.*
 courts_data/*
 data/*
-
+output/*
+processed/*

@@ -2,8 +2,16 @@
 
 Currently just a selection of scripts.
 
+You will need Python3 (with virtualenv), NPM and golang installed - e.g. on Ubuntu
+
+```
+sudo aptitude install python3-virtualenv npm golang
+```
+
 Install python requirements
 ```
+python3 -m virtualenv --python=python3 .ve
+source .ve/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -71,6 +79,14 @@ This also runs the go matching webserver in the background and kills it once use
 To get the area matches run 
 ```
 python area_matches.py
+```
+
+### Running without the courts data
+
+Create a dummy courts data file:
+
+```
+echo '[]' > courts_data/courts.json 
 ```
 
 ## Generating the html
