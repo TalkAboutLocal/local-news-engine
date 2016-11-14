@@ -1,4 +1,5 @@
 import os
+import re
 import glob
 import nltk
 import json
@@ -85,23 +86,23 @@ for fname in glob.glob('./data/www.camdennewjournal.com/**', recursive=True):
         continue
     content = doc.find('//div[@class="node"]/div[@class="content"]')
     if content is not None:
+        text = content.text_content()
+
         date = None
         # Looks like Camden New journal manually adds these dates to the text
-        # of the article. Looking for <strong> and <b> catches most of them,
-        # but because it was added manually, some will be missed.
-        date_block = content.find('.//strong')
-        if date_block is None:
-            date_block = content.find('.//b')
-        if date_block is not None:
+        # of the article. A text match seems to be the most reliable way to extract these.
+        # Check for the word 'Published: ' followed by 3 more words.
+        m = re.search('Published:\s+(\S+\s+\S+\s+\S+)', text)
+        if m:
+            date_text = m.group(1)
             try:
-                date = dateutil.parser.parse(date_block.text_content(), fuzzy=True)
+                date = dateutil.parser.parse(date_text, fuzzy=True)
             except (calendar.IllegalMonthError, ValueError):
                 pass
         else:
             print('No date found on {}'.format(fname))
 
         i += 1
-        text = content.text_content()
         for name in extract_entity_names_from_text(text):
             entity_names[name].append({
                 'link': fname.replace('./data/', 'http://'),
