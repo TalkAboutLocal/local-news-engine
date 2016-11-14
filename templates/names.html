@@ -173,6 +173,9 @@ $(function () {
     var res = nunjucks.render('pager.html', context);
     $("#main").append(res)
 
+    // Track a fake url for this page in piwik
+    _paq.push(['setCustomUrl', 'local://names.html/page=' + current_page]);
+    _paq.push(['trackPageView']);
   }
 
   var fragment_obj = get_fragment_obj()

@@ -65,9 +65,13 @@
     <!-- Piwik -->
     <script type="text/javascript">
       var _paq = _paq || [];
-      _paq.push(["setDomains", ["*.example.com"]]);
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
+      // Don't send the actual URL
+      _paq.push(['setCustomUrl', 'local://names.html/']);
+      // Turn off link tracking for now, as it leaks the url
+      //_paq.push(['enableLinkTracking']);
+      // A lot of events happen in the jinja template render instead of here
+      // accurately measure the time spent on the last pageview of a visit
+      _paq.push(['enableHeartBeatTimer']);
       (function() {
         var u="https://mon.opendataservices.coop/piwik/";
         _paq.push(['setTrackerUrl', u+'piwik.php']);
