@@ -65,7 +65,7 @@ console.log("Summary took " + (t1 - t0) + " milliseconds.")
 
 function name_search(query) {
   var results = [];
-  var sources = query.sources || Object.keys(source_counter);
+  var sources = query.sources || [];
   var wards = query.wards || [];
   var name_search = query.name_search || "";
   var names = [];
@@ -80,9 +80,17 @@ function name_search(query) {
   interesting_names.some(function(item, index) {
     var new_item = item.slice()
 
-    var in_sources = Object.keys(item[3].counted_source).some(function(source) {
-      return sources.indexOf(source) !== -1
+    var matching_sources = 0
+    Object.keys(item[3].counted_source).forEach(function(source) {
+      if (sources.indexOf(source) !== -1) {
+        matching_sources += 1
+      }
     })
+    var in_sources = false
+    if (matching_sources > 1 || (matching_sources === 1 && sources.length === 1)) {
+        in_sources = true
+    }
+
     var in_wards = Object.keys(item[3].wards).some(function(ward) {
       return wards.indexOf(ward) !== -1
     })
@@ -99,7 +107,7 @@ function name_search(query) {
       if (wards.length === 0) {
         appreance_in_wards = true
       }
-      if (appreance_in_wards && 
+      if (appreance_in_wards &&
           sources.indexOf(appearance.source) !== -1) {
         return true
       }
@@ -118,7 +126,7 @@ function name_search(query) {
       })
     }
 
-    if (in_sources && in_wards && found) {
+    if (in_sources && in_wards && found && matching_appearances.length >= 1) {
       item[3].index = index
       results.push(new_item)
     }
@@ -171,7 +179,9 @@ $(function () {
     console.log("Search took " + (t1 - t0) + " milliseconds.");
 
 
-    $("#main").append('<h4 class="heading-in-panel"> Matches ' + results.length + '</h4>')
+    var res = nunjucks.render('result_header.html', {"result_size": results.length, "query": fragment_obj});
+    $("#main").append(res)
+
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
       var res = nunjucks.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index, "key_fields": key_fields, "matching": results[i][4]});
       $("#main").append(res)

@@ -121,7 +121,7 @@ def load_camden_license_data():
         row['_postcodes'] = set()
         row["_postcode_districts"] = set()
 
-        address = row.get('Premises address:')
+        address = row.get('Premises address')
         if address:
             postcodes = find_postcodes(address)
             for item in postcodes:
