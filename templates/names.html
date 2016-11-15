@@ -192,7 +192,6 @@ $(function () {
     _paq.push(['setCustomDimension', customDimensionId=1, customDimensionValue=wards_slug]);
     _paq.push(['setCustomDimension', customDimensionId=2, customDimensionValue=sources_slug]);
     _paq.push(['setCustomDimension', customDimensionId=3, customDimensionValue=search_slug]);
-    _paq.push(['setCustomDimension', customDimensionId=4, customDimensionValue='{{ date }}']);
     // Track a fake url for this page in piwik
     _paq.push(['setCustomUrl', 'local://names.html/' + search_slug + '/' + wards_slug + '/' + sources_slug + '/page=' + current_page]);
     _paq.push(['trackPageView']);

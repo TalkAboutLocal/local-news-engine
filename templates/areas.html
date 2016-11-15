@@ -36,3 +36,8 @@
 </div>
 
 {% endblock %}
+
+{% block extrapiwik %}
+_paq.push(['setCustomUrl', 'local://areas.html']);
+_paq.push(['trackPageView']);
+{% endblock %}

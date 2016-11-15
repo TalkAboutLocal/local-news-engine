@@ -69,7 +69,9 @@
       _paq.push(['setCustomUrl', 'local://']);
       // Turn off link tracking for now, as it leaks the url
       //_paq.push(['enableLinkTracking']);
-      // Note: A lot of events happen in the jinja template render instead of here
+      _paq.push(['setCustomDimension', customDimensionId=4, customDimensionValue='{{ date }}']);
+      {% block extrapiwik %}{% endblock %}
+      // Note: A lot of events happen in the names.html rerender function instead of here
       (function() {
         var u="https://mon.opendataservices.coop/piwik/";
         _paq.push(['setTrackerUrl', u+'piwik.php']);
