@@ -259,10 +259,10 @@ def load_camden_journal_data(all_names):
         camden_journal_data = json.load(camden_journal)
 
     for key, value in camden_journal_data.items():
-        for link in value:
+        for data in value:
             all_names[clean_name(key)].append({"source": "Camden New Journal", 
                                                "source_type": "Name",
-                                               "data": {"link": "http://" + link[2:]}})
+                                               "data": data})
 
 
 courts_data = load_courts_data()

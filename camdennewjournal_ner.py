@@ -1,7 +1,10 @@
 import os
+import re
 import glob
 import nltk
 import json
+import calendar
+import dateutil.parser
 import lxml.html as html
 from collections import defaultdict
 
@@ -9,21 +12,22 @@ from collections import defaultdict
 
 Some setup is required to run this script:
 
-Mirror the site with wget:
-wget -m "http://www.camdennewjournal.com/" -X sites 
+Mirror the site with wget (warning this will take hours):
+```
+# Remove any files that already exist
+rm -r data/www.camdennewjournal.com
+time wget -m "http://www.camdennewjournal.com/" -X sites -P data --restrict-file-names=nocontrol --accept-regex='^http://www.camdennewjournal.com/[^/]*[^\?]*$' 2> data/wget.log
+```
 
-Download nltk data:
-Open up a python prompt and:
-import nltk
-nltk.download()
-d
-punkt
-d
-averaged_perceptron_tagger
-d
-maxent_ne_chunker
-d
-words
+-X sites
+    Exclude anythign under /sites/ - this avoids downloading images/CSS/JS
+-P data
+    Place the downloaded files in the data/ directory
+--restrict-file-names=nocontrol
+    We need this for wget to save UTF-8 filenames properly
+--accept-regex
+    This has a regex to allow http://www.camdennewjournal.com/news?page=1 but not http://www.camdennewjournal.com/news/thisshouldreally404?page=1
+
 
 
 """
@@ -59,11 +63,20 @@ def write_json(entity_names):
     with open('data/saved_camdennewjournal_entities.json', 'w') as fp:
         json.dump(entity_names, fp, default=json_set_default, indent=4, sort_keys=True)
 
-entity_names = defaultdict(set)
+
+# Download required nltk data
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
+
+
+
+entity_names = defaultdict(list)
 i = 0
 
 
-for fname in glob.glob('./www.camdennewjournal.com/**', recursive=True):
+for fname in glob.glob('./data/www.camdennewjournal.com/**', recursive=True):
     if os.path.isdir(fname):
         continue
     try:
@@ -73,10 +86,28 @@ for fname in glob.glob('./www.camdennewjournal.com/**', recursive=True):
         continue
     content = doc.find('//div[@class="node"]/div[@class="content"]')
     if content is not None:
-        i += 1
         text = content.text_content()
+
+        date = None
+        # Looks like Camden New journal manually adds these dates to the text
+        # of the article. A text match seems to be the most reliable way to extract these.
+        # Check for the word 'Published: ' followed by 3 more words.
+        m = re.search('Published:\s+(\S+\s+\S+\s+\S+)', text)
+        if m:
+            date_text = m.group(1)
+            try:
+                date = dateutil.parser.parse(date_text, fuzzy=True)
+            except (calendar.IllegalMonthError, ValueError):
+                pass
+        else:
+            print('No date found on {}'.format(fname))
+
+        i += 1
         for name in extract_entity_names_from_text(text):
-            entity_names[name].add(fname)
+            entity_names[name].append({
+                'link': fname.replace('./data/', 'http://'),
+                '_recency': date.isoformat() if date else None
+            })
         if i % 1000 == 0:
             print('writing intermediate json')
             write_json(entity_names)

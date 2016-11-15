@@ -41,7 +41,7 @@ for key, value in all_names.items():
     distinct_name_sources = set()
     distinct_data_sources = set()
 
-    value.sort(key=lambda x: x.get('data', {}).get("_recency", ""), reverse=True)
+    value.sort(key=lambda x: x.get('data', {}).get("_recency") or "", reverse=True)
 
 
     for item in value:
