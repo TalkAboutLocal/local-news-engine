@@ -114,6 +114,10 @@ def load_camden_license_data():
     camden_license_list = list(camden_license_data.values())
 
     for row in camden_license_list:
+        for item in list(row):
+            value = row.pop(item)
+            row[item.rstrip(":")] = value
+
         row['_postcodes'] = set()
         row["_postcode_districts"] = set()
 
@@ -131,7 +135,7 @@ def load_camden_license_data():
         row["_source_type"] = "License"
 
         row["_names"] = set()
-        for key in ('Applicant:', 'Correspondant:', 'Director:', 'Employee:'):
+        for key in ('Applicant', 'Correspondant', 'Director', 'Employee'):
             name = row.get(key)
             if name:
                 row["_names"].add(clean_name(name.replace('  ',' ')))
