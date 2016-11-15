@@ -28,6 +28,17 @@
         </div>
       </div>
       <div class="col-md-12">
+      {% for key, value in info.counted_source %}
+        {% if key == "Courts" %}
+          <div class="col-md-12 bg-danger">
+		<span class="margin-left-5">
+		  <h5>WARNING: This record contains courts data. You should be aware that this information must be handled with additional care. Appearances in court are liable to change between publication of the courts list and the day of the hearing.</h5>
+                </span>
+	  </div>
+        {% endif %}
+      {% endfor %}
+      </div>
+      <div class="col-md-12">
         <h4 class="text-muted"><b>Latest Appearance: {{values[0].source}}</b> {{ values[0].data._recency.substring(0,10) }}</h4>
 	<div class="col-md-12">
 	  <h4 class="text-muted"><b>Key fields</b></h4>
