@@ -1,13 +1,7 @@
 from jinja2 import Environment, FileSystemLoader 
 import datetime
 import json
-import sys
 env = Environment(loader=FileSystemLoader('templates'), autoescape=True)
-
-if len(sys.argv) > 1:
-    user = sys.argv[1]
-else:
-    user = 'test'
 
 names_template = env.get_template('names.html')
 area_template = env.get_template('areas.html')
@@ -22,7 +16,6 @@ with open('output/areas.html', 'w+') as name_output:
     name_output.write(area_template.render(
         templates=templates,
         area_matches=area_matches,
-        user=user,
         date=datetime.date.today().isoformat(),
     ))
 
@@ -34,7 +27,6 @@ with open('output/names.html', 'w+') as name_output:
         templates=templates,
         interesting_names=interesting_names,
         interesting_names_json=json.dumps(interesting_names),
-        user=user,
         date=datetime.date.today().isoformat(),
     ))
 
