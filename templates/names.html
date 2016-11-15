@@ -173,6 +173,28 @@ $(function () {
     var res = nunjucks.render('pager.html', context);
     $("#main").append(res)
 
+
+    if (fragment_obj.name_search) {
+        var search_slug = 'search';
+    } else {
+        var search_slug = 'nosearch';
+    }
+    if (fragment_obj.wards) {
+        var wards_slug = fragment_obj.wards.join();
+    } else {
+        var wards_slug = '_';
+    }
+    if (fragment_obj.sources) {
+        var sources_slug = fragment_obj.sources.join();
+    } else {
+        var sources_slug = '_';
+    }
+    _paq.push(['setCustomDimension', customDimensionId=1, customDimensionValue=wards_slug]);
+    _paq.push(['setCustomDimension', customDimensionId=2, customDimensionValue=sources_slug]);
+    _paq.push(['setCustomDimension', customDimensionId=3, customDimensionValue=search_slug]);
+    // Track a fake url for this page in piwik
+    _paq.push(['setCustomUrl', 'local://names.html/' + search_slug + '/' + wards_slug + '/' + sources_slug + '/page=' + current_page]);
+    _paq.push(['trackPageView']);
   }
 
   var fragment_obj = get_fragment_obj()
@@ -194,6 +216,17 @@ $(function () {
                                                   "key_fields": interesting_names[name_index][4],
                                                   "source_type": source_type});
     modal.find('.modal-content')[0].innerHTML = res
+    _paq.push(['trackEvent', 'modal', 'show'])
+  })
+  $('#modal-for-name').on('hide.bs.modal', function (event) {
+    _paq.push(['trackEvent', 'modal', 'hide'])
+  })
+
+  $('.full_record').on('show.bs.collapse', function (event) {
+    _paq.push(['trackEvent', 'full_record', 'show'])
+  })
+  $('.full_record').on('hide.bs.collapse', function (event) {
+    _paq.push(['trackEvent', 'full_record', 'hide'])
   })
 
   $('.source-checkbox').on('change', function (event) {

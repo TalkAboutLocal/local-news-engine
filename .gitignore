@@ -5,3 +5,5 @@ courts_data/*
 data/*
 output/*
 processed/*
+*.swp
+.ve
