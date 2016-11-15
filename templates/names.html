@@ -34,6 +34,7 @@
 PAGE_SIZE = 50
 
 interesting_names = {{interesting_names_json|safe}};
+key_fields = {{key_fields_json|safe}};
 source_counter = {};
 ward_counter = {};
 
@@ -61,7 +62,6 @@ interesting_names.forEach(function(item) {
 
 var t1 = performance.now();
 console.log("Summary took " + (t1 - t0) + " milliseconds.")
-console.log(ward_counter)
 
 function name_search(query) {
   var results = [];
@@ -78,24 +78,36 @@ function name_search(query) {
   }
 
   interesting_names.some(function(item, index) {
-    in_sources = Object.keys(item[3].counted_source).some(function(source) {
+    var new_item = item.slice()
+
+    var in_sources = Object.keys(item[3].counted_source).some(function(source) {
       return sources.indexOf(source) !== -1
     })
-    in_wards = Object.keys(item[3].wards).some(function(ward) {
+    var in_wards = Object.keys(item[3].wards).some(function(ward) {
       return wards.indexOf(ward) !== -1
     })
     if (wards.length === 0) {
       in_wards = true
     }
 
-    // Remove sources
-    //var number_of_sources = 0
-    //Object.keys(item[3].counted_source).some(function(source) {
-      //if (remove_sources.indexOf(source) == -1) {
-      //  number_of_sources = number_of_sources + 1;
-      //}
-    //})
-    // search names
+    var matching_appearances = item[2].filter(function(appearance) {
+      var appearance_wards = appearance.data._wards || []
+
+      var appreance_in_wards = appearance_wards.some(function(ward) {
+        return wards.indexOf(ward) !== -1
+      })
+      if (wards.length === 0) {
+        appreance_in_wards = true
+      }
+      if (appreance_in_wards && 
+          sources.indexOf(appearance.source) !== -1) {
+        return true
+      }
+    })
+
+    new_item.push(matching_appearances)
+
+
     found = true
     if (name_search) {
       found = names.some(function(name) {
@@ -108,7 +120,7 @@ function name_search(query) {
 
     if (in_sources && in_wards && found) {
       item[3].index = index
-      results.push(item)
+      results.push(new_item)
     }
   })
   console.log(results.length)
@@ -149,13 +161,19 @@ $(function () {
 
     var t0 = performance.now();
     results = name_search(fragment_obj)
+    results.sort(function (a,b) {
+      if (a[4][0].data._recency < b[4][0].data._recency) return 1;
+      if (a[4][0].data._recency > b[4][0].data._recency) return -1;
+      return 0; 
+    })
+    
     var t1 = performance.now();
     console.log("Search took " + (t1 - t0) + " milliseconds.");
 
 
     $("#main").append('<h4 class="heading-in-panel"> Matches ' + results.length + '</h4>')
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
-      var res = nunjucks.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index, "key_fields": results[i][4]});
+      var res = nunjucks.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index, "key_fields": key_fields, "matching": results[i][4]});
       $("#main").append(res)
     }
 
@@ -213,7 +231,7 @@ $(function () {
     var res = nunjucks.render('name_modal.html', {"name": interesting_names[name_index][1], 
                                                   "values": interesting_names[name_index][2], 
                                                   "info": interesting_names[name_index][3],
-                                                  "key_fields": interesting_names[name_index][4],
+                                                  "key_fields": key_fields,
                                                   "source_type": source_type});
     modal.find('.modal-content')[0].innerHTML = res
     _paq.push(['trackEvent', 'modal', 'show'])

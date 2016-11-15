@@ -29,4 +29,3 @@ with open('output/names.html', 'w+') as name_output:
         interesting_names_json=json.dumps(interesting_names),
         date=datetime.date.today().isoformat(),
     ))
-
