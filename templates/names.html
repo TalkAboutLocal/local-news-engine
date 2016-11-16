@@ -49,6 +49,14 @@ interesting_names.forEach(function(item) {
   })
   item[3].wards = {}
   item[2].forEach(function(appearance) {
+    appearance.all_text = Object.keys(appearance.data).map(function (key) {
+      if (appearance.data[key]) {
+        return appearance.data[key].toString().toLowerCase()
+      }
+      return ""
+    }).join(" ")
+  })
+  item[2].forEach(function(appearance) {
     wards = appearance.data._wards || []
     wards.forEach(function (ward) {
       if (!ward_counter[ward]) {
@@ -67,6 +75,7 @@ function name_search(query) {
   var results = [];
   var sources = query.sources || [];
   var wards = query.wards || [];
+  var text_search = query.text_search || ""
   var name_search = query.name_search || "";
   var names = [];
   if (name_search) {
@@ -74,6 +83,14 @@ function name_search(query) {
     var names_split = lowered.split(" or ");
     names_split.forEach(function (name) {
       names.push(name.trim().split(" "));
+    })
+  }
+  var text = []
+  if (text_search) {
+    var lowered = text_search.toLowerCase();
+    var text_split = lowered.split(" or ");
+    text_split.forEach(function (name) {
+      text.push(name.trim().split(" "));
     })
   }
 
@@ -91,15 +108,19 @@ function name_search(query) {
         in_sources = true
     }
 
-    var in_wards = Object.keys(item[3].wards).some(function(ward) {
-      return wards.indexOf(ward) !== -1
-    })
-    if (wards.length === 0) {
-      in_wards = true
-    }
-
     var matching_appearances = item[2].filter(function(appearance) {
       var appearance_wards = appearance.data._wards || []
+
+      if (text_search) {
+        var text_search_found = text.some(function(string) {
+          return string.every(function(split) {
+            var name_to_match = appearance.all_text
+            if (name_to_match.indexOf(split) !== -1) { return true }
+          })
+        })
+      } else {
+        var text_search_found = true
+      } 
 
       var appreance_in_wards = appearance_wards.some(function(ward) {
         return wards.indexOf(ward) !== -1
@@ -108,7 +129,8 @@ function name_search(query) {
         appreance_in_wards = true
       }
       if (appreance_in_wards &&
-          sources.indexOf(appearance.source) !== -1) {
+          sources.indexOf(appearance.source) !== -1 &&
+          text_search_found) {
         return true
       }
     })
@@ -116,9 +138,9 @@ function name_search(query) {
     new_item.push(matching_appearances)
 
 
-    found = true
+    name_found = true
     if (name_search) {
-      found = names.some(function(name) {
+      var name_found = names.some(function(name) {
         return name.every(function(split) {
           var name_to_match = item[3].fuzzy_names.join(" ") + " " + item[1]
           if (name_to_match.indexOf(split) !== -1) { return true }
@@ -126,7 +148,7 @@ function name_search(query) {
       })
     }
 
-    if (in_sources && in_wards && found && matching_appearances.length >= 1) {
+    if (in_sources && name_found && matching_appearances.length >= 1) {
       item[3].index = index
       results.push(new_item)
     }
@@ -142,7 +164,7 @@ function get_fragment_obj () {
 
    var fragment_obj = uri.fragment(true);
    Object.keys(fragment_obj).forEach(function (key) {
-     if (!Array.isArray(fragment_obj[key]) && key != "page" && key != "name_search" ) {
+     if (!Array.isArray(fragment_obj[key]) && key != "page" && key != "name_search" && key != "text_search" ) {
        fragment_obj[key] = [fragment_obj[key]]
      }
    })
@@ -153,6 +175,12 @@ function get_fragment_obj () {
 $(function () {
   var rerender = function() {
     var fragment_obj = get_fragment_obj()
+    if (Object.keys(fragment_obj).length === 0) {
+      var res = nunjucks.render('sidebar.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
+      $("#sidebar").empty(res)
+      $("#sidebar").append(res)
+      $('.selectpicker').selectpicker('render');
+    }
 
     var page_number = 0  
     if (fragment_obj.page) {
@@ -163,6 +191,7 @@ $(function () {
     }
     var current_page = fragment_obj.page
 
+
     $("#main").empty()
     $("#modals").empty()
     $(window).scrollTop(0)
@@ -170,8 +199,10 @@ $(function () {
     var t0 = performance.now();
     results = name_search(fragment_obj)
     results.sort(function (a,b) {
-      if (a[4][0].data._recency < b[4][0].data._recency) return 1;
-      if (a[4][0].data._recency > b[4][0].data._recency) return -1;
+      recency_a = a[4][0].data._recency || ''
+      recency_b = b[4][0].data._recency || ''
+      if (recency_a > recency_b) return -1;
+      if (recency_a < recency_b) return 1;
       return 0; 
     })
     
@@ -257,7 +288,7 @@ $(function () {
     _paq.push(['trackEvent', 'full_record', 'hide'])
   })
 
-  $('.source-checkbox').on('change', function (event) {
+  $('.container').on('change', '.source-checkbox' , function (event) {
     var new_source_values = []
     $('#filter-form').serializeArray().forEach(function (item) {
       if (item.name == "sources") {
@@ -272,21 +303,34 @@ $(function () {
   })
 
 
-  $('#name-search').on('input', function (event) {
+  var name_search_timer
+  $('.container').on('input', '#name-search', function (event) {
     var fragment_obj = get_fragment_obj()
     fragment_obj.name_search = $('#name-search').val()
     fragment_obj.page = 0
-    var ran = false
     function set_fragment() {
-      if (ran) {return}
       var uri = URI('#').fragment(fragment_obj).toString();
       window.location.hash = uri
       ran = true
     }
-    setTimeout(set_fragment, 500)
+    name_search_timer && clearTimeout(name_search_timer);
+    name_search_timer = setTimeout(set_fragment, 450)
   })
 
-  $('#clear-name-search').on('click', function (event) {
+  var text_search_timer
+  $('.container').on('input', '#text-search', function (event) {
+    var fragment_obj = get_fragment_obj()
+    fragment_obj.text_search = $('#text-search').val()
+    fragment_obj.page = 0
+    function set_fragment() {
+      var uri = URI('#').fragment(fragment_obj).toString();
+      window.location.hash = uri
+    }
+    text_search_timer && clearTimeout(text_search_timer);
+    text_search_timer = setTimeout(set_fragment, 450)
+  })
+
+  $('.container').on('click', '#clear-name-search', function (event) {
     var fragment_obj = get_fragment_obj()
     $('#name-search').val("")
     fragment_obj.name_search = ""
@@ -294,7 +338,17 @@ $(function () {
     var uri = URI('#').fragment(fragment_obj).toString();
     window.location.hash = uri
   })
-  $('#wards select').on('changed.bs.select', function (e) {
+
+  $('.container').on('click', '#clear-text-search', function (event) {
+    var fragment_obj = get_fragment_obj()
+    $('#text-search').val("")
+    fragment_obj.text_search = ""
+    fragment_obj.page = 0
+    var uri = URI('#').fragment(fragment_obj).toString();
+    window.location.hash = uri
+  })
+
+  $('.container').on('changed.bs.select', '#wards select', function (e) {
     var fragment_obj = get_fragment_obj()
     var value = $('#wards select').val() || []
     fragment_obj.wards = value
