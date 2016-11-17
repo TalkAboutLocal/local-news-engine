@@ -29,8 +29,8 @@
       </div>
       <div class="col-md-12">
         <h4 class="text-muted"><b>Latest Appearance: {{matching[0].source}}</b> {% if matching[0].data._recency %} {{ matching[0].data._recency.substring(0,10) }}{% endif %}</h4>
-	<div class="col-md-12">
-	  <h4 class="text-muted"><b>Key fields</b></h4>
+        <div class="col-md-12">
+          <h4 class="text-muted"><b>Key fields</b></h4>
           <dl class="dl-horizontal">
 	         {% for term in key_fields|sort %}
              {% if matching[0].data[term] %}

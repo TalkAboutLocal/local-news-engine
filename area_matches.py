@@ -6,6 +6,11 @@ area_of_interest = ["islington", "camden"]
 
 from load_and_normalize_data import all_data
 
+all_data.sort(key=lambda x: x.get("_recency", ""), reverse=True)
+
+with open("processed/all_data.json", "w+") as all_data_file:
+    json.dump(all_data, all_data_file, indent=2)
+
 
 matches = []
 
@@ -28,3 +33,4 @@ matches.sort(key=lambda x: x.get("_recency", ""), reverse=True)
 
 with open("processed/area_matches.json", "w+") as area_matches_file:
     json.dump(matches, area_matches_file, indent=2)
+
