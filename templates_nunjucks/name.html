@@ -28,30 +28,31 @@
         </div>
       </div>
       <div class="col-md-12">
-        <h4 class="text-muted"><b>Latest Appearance: {{values[0].source}}</b> {{ values[0].data._recency.substring(0,10) }}</h4>
+        <h4 class="text-muted"><b>Latest Appearance: {{matching[0].source}}</b> {% if matching[0].data._recency %} {{ matching[0].data._recency.substring(0,10) }}{% endif %}</h4>
 	<div class="col-md-12">
 	  <h4 class="text-muted"><b>Key fields</b></h4>
           <dl class="dl-horizontal">
-	    {% for term, definition in key_fields|dictsort %}
-              {% if definition %}
-                <dt>{{term}}</dt> 
-                <dd>
-                  {% set definition_string = definition|string %}
-                  {% if definition_string and definition_string.substring(0,4) == 'http' %}
-                    <a href="{{definition}}">{{definition}}</a>
-                  {% else %}
-                    {{definition}}
-                  {% endif %}
-                </dd>
-              {% endif %}
-            {% endfor %}
-	  </dl>
+	         {% for term in key_fields|sort %}
+             {% if matching[0].data[term] %}
+               <dt>{{term}}</dt> 
+               <dd>
+                 {% set definition_string = matching[0].data[term]|string %}
+                 {% if definition_string and definition_string.substring(0,4) == 'http' %}
+                   <a href="{{matching[0].data[term]}}">{{matching[0].data[term]}}</a>
+                 {% else %}
+                   {{matching[0].data[term]}}
+                 {% endif %}
+               </dd>
+             {% endif %}
+           {% endfor %}
+	        </dl>
         </div>
         <div class="col-md-12">
           <a data-toggle="collapse" href="#full_record_{{ name|lower|replace(" ","_") }}" aria-expanded="false" aria-controls="collapseExample">
           <b>Full record</b></a>
           <dl class="dl-horizontal collapse full_record" id="full_record_{{ name|lower|replace(" ","_") }}">
-            {% for term, definition in values[0].data|dictsort %}
+
+            {% for term, definition in matching[0].data|dictsort %}
               {% if term[0] != "_" and term != "Done" and definition %}
                 <dt>{{term}}</dt> 
                  <dd>

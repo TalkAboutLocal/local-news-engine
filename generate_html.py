@@ -22,11 +22,13 @@ with open('output/areas.html', 'w+') as name_output:
 with open("processed/interesting_names.json") as interesting_names_file:
     interesting_names = json.load(interesting_names_file)
 
-with open('output/names.html', 'w+') as name_output:
+with open('output/names.html', 'w+') as name_output, open("key_field_names.txt") as key_field_names_file:
+    key_fields = list(set([key_field_name.strip() for key_field_name in key_field_names_file]))
     name_output.write(names_template.render(
         templates=templates,
         interesting_names=interesting_names,
         interesting_names_json=json.dumps(interesting_names),
         date=datetime.date.today().isoformat(),
+        key_fields_json=json.dumps(key_fields),
     ))
 

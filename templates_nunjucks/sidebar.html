@@ -1,11 +1,8 @@
 <div class="panel panel-default overflow">
   <div class="panel-body">
     <form id="filter-form">
-      <h3 class="heading-in-panel">Name Search</h3>
-        <input id="name-search" type="text" class="form-control" placeholder="Search for Name" value="{{fragment_obj.name_search or ''}}">
-        <span id="clear-name-search" class="glyphicon glyphicon-remove-circle"></span>
 
-      <h3>Sources</h3>
+      <h3 class="heading-in-panel">Sources</h3>
       <div id="sources">
         {% for source, count in source_counter | dictsort %}
           <div class="checkbox">
@@ -17,6 +14,13 @@
           </div>
         {% endfor %}
       </div>
+      <h3>Name Search</h3>
+        <input id="name-search" type="text" class="form-control" placeholder="Search for Name" value="{{fragment_obj.name_search or ''}}">
+        <span id="clear-name-search" class="glyphicon glyphicon-remove-circle"></span>
+
+      <h3>Text Search</h3>
+        <input id="text-search" type="text" class="form-control" placeholder="Search for Text" value="{{fragment_obj.text_search or ''}}">
+        <span id="clear-text-search" class="glyphicon glyphicon-remove-circle"></span>
 
       <h3>Wards</h3>
       <div id="wards">
