@@ -1,0 +1,82 @@
+[
+    {
+        ":@computed_region_6i9a_26nj": "68",
+        ":@computed_region_hxwp_gyfc": "10",
+        "applicant_name": "A M Person",
+        "application_number": "xxxx/xx/xx",
+        "application_type": "Full Planning Permission",
+        "case_officer": "Anne Otherperson",
+        "case_officer_team": "East",
+        "comment": "Comments Closed",
+        "conservation_areas": "A Park",
+        "decision_date": "2012-10-14T00:00:00.000",
+        "decision_type": "Refused",
+        "decison_level": "Delegated",
+        "development_address": "Some Place, Islington, London",
+        "development_description": "House changes",
+        "earliest_decision_date": "2012-10-24T00:00:00.000",
+        "easting": "528577",
+        "full_application": "http://somelinkid",
+        "last_uploaded": "2016-11-05T03:01:26.000",
+        "latitude": "51.960143",
+        "location": {
+            "coordinates": [
+                -0.546591,
+                51.960143
+            ],
+            "type": "Point"
+        },
+        "longitude": "-0.546591",
+        "northing": "185215",
+        "pk": "111111",
+        "registered_date": "2012-10-19T00:00:00.000",
+        "registered_in_last_28_working_days": "No",
+        "registered_in_last_7_working_days": "No",
+        "responsibility_type": "PlanningApplication",
+        "socrata_id": "000000",
+        "spatial_accuracy": "Nearest OS Open Map-Local Building",
+        "system_status": "Appeal Decided",
+        "system_status_change_date": "2015-07-20T00:00:00.000",
+        "ward": "SomeWard"
+    },
+    {
+        ":@computed_region_6i9a_26nj": "70",
+        ":@computed_region_hxwp_gyfc": "10",
+        "applicant_name": "A M Person",
+        "application_number": "xxxx/xx/xx",
+        "application_type": "Full Planning Permission",
+        "case_officer": "Anne Otherperson",
+        "case_officer_team": "A Team",
+        "comment": "Comments Closed",
+        "conservation_areas": "A Park",
+        "decision_date": "2013-03-03T00:00:00.000",
+        "decision_type": "Granted",
+        "decison_level": "Members Briefing",
+        "development_address": "A Road  London",
+        "development_description": "Improvements.",
+        "earliest_decision_date": "2015-05-25T00:00:00.000",
+        "easting": "528794",
+        "full_application": "http://somelinkid",
+        "last_uploaded": "2016-06-16T03:01:26.000",
+        "latitude": "51.358036",
+        "location": {
+            "coordinates": [
+                -0.543546,
+                51.358036
+            ],
+            "type": "Point"
+        },
+        "longitude": "-0.543546",
+        "northing": "187772",
+        "pk": "000000",
+        "registered_date": "2010-08-04T00:00:00.000",
+        "registered_in_last_28_working_days": "No",
+        "registered_in_last_7_working_days": "No",
+        "responsibility_type": "PlanningApplication",
+        "socrata_id": "000000",
+        "spatial_accuracy": "Nearest OS Open Map-Local Building",
+        "system_status": "Final Decision",
+        "system_status_change_date": "2014-03-24T00:00:00.000",
+        "ward": "A Ward"
+    }
+]
