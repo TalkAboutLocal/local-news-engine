@@ -4,6 +4,7 @@ import glob
 import nltk
 import json
 import calendar
+import argparse
 import dateutil.parser
 import lxml.html as html
 from collections import defaultdict
@@ -28,6 +29,19 @@ time wget -m "http://www.camdennewjournal.com/" -X sites -P data --restrict-file
 --accept-regex
     This has a regex to allow http://www.camdennewjournal.com/news?page=1 but not http://www.camdennewjournal.com/news/thisshouldreally404?page=1
 
+
+Then run ``python camdennewjournal_ner.py``. 
+
+
+
+Running for islingtontribune.com:
+```
+# Remove any files that already exist
+rm -r data/www.islingtontribune.com
+time wget -m "http://www.islingtontribune.com/" -X sites -P data --restrict-file-names=nocontrol --accept-regex='^http://www.islingtontribune.com/[^/]*[^\?]*$' 2> data/wget_islingtontribune.log
+```
+
+Then run ``python camdennewjournal_ner.py --inputdir data/www.islingtontribune.com --output data/saved_islingtontribune_entities.json``.
 
 
 """
@@ -60,8 +74,16 @@ def extract_entity_names_from_text(text):
 
 
 def write_json(entity_names):
-    with open('data/saved_camdennewjournal_entities.json', 'w') as fp:
+    with open(args.output, 'w') as fp:
         json.dump(entity_names, fp, default=json_set_default, indent=4, sort_keys=True)
+
+
+# Parse commandline arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--inputdir', default='./data/www.camdennewjournal.com')
+parser.add_argument('--output', default='data/saved_camdennewjournal_entities.json')
+args = parser.parse_args()
+
 
 
 # Download required nltk data
@@ -76,7 +98,7 @@ entity_names = defaultdict(list)
 i = 0
 
 
-for fname in glob.glob('./data/www.camdennewjournal.com/**', recursive=True):
+for fname in glob.glob(args.inputdir+'/**', recursive=True):
     if os.path.isdir(fname):
         continue
     try:
