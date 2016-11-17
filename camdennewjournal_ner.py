@@ -41,7 +41,7 @@ rm -r data/www.islingtontribune.com
 time wget -m "http://www.islingtontribune.com/" -X sites -P data --restrict-file-names=nocontrol --accept-regex='^http://www.islingtontribune.com/[^/]*[^\?]*$' 2> data/wget_islingtontribune.log
 ```
 
-Then run ``python camdennewjournal_ner.py --inputdir data/www.islingtontribune.com --output data/saved_islingtontribune_entities.json``.
+Then run ``python camdennewjournal_ner.py --inputdir ./data/www.islingtontribune.com --output data/saved_islingtontribune_entities.json``.
 
 
 """
