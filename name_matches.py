@@ -14,7 +14,7 @@ proc = subprocess.Popen(["go", "run", "cluster.go"])
 
 time.sleep(5)
 with open('processed/matches.csv', 'w+') as matches:
-    res = requests.post('http://0.0.0.0:9999/cluster', data=encoded_data)
+    res = requests.post('http://127.0.0.1:9999/cluster', data=encoded_data)
     matches.write(res.text)
     proc.kill()
 
