@@ -8,5 +8,5 @@ numpy
 Jinja2
 python-dateutil
 pytest
-selenium
+selenium==2.53.6
 
