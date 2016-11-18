@@ -28,6 +28,17 @@
         </div>
       </div>
       <div class="col-md-12">
+      {% for key, value in info.counted_source %}
+        {% if key == "Courts" %}
+          <div class="col-md-12 bg-danger">
+		<span class="margin-left-5">
+		  <h5>This result only indicates a term searched appears on the lists searched. It is your responsibility to verify any actual court appearances, charges, pleas and results independently before publication.</h5>
+                </span>
+	  </div>
+        {% endif %}
+      {% endfor %}
+      </div>
+      <div class="col-md-12">
         <h4 class="text-muted"><b>Latest Appearance: {{matching[0].source}}</b> {% if matching[0].data._recency %} {{ matching[0].data._recency.substring(0,10) }}{% endif %}</h4>
 	<div class="col-md-12">
 	  <h4 class="text-muted"><b>Key fields</b></h4>
