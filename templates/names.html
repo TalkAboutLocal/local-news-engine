@@ -115,7 +115,7 @@ function name_search(query) {
         var text_search_found = text.some(function(string) {
           return string.every(function(split) {
             var name_to_match = appearance.all_text
-            if (name_to_match.indexOf(split) !== -1) { return true }
+            if (name_to_match.indexOf(split) === 0 || name_to_match.indexOf(" " + split) !== -1) { return true }
           })
         })
       } else {
@@ -143,7 +143,7 @@ function name_search(query) {
       var name_found = names.some(function(name) {
         return name.every(function(split) {
           var name_to_match = item[3].fuzzy_names.join(" ") + " " + item[1]
-          if (name_to_match.indexOf(split) !== -1) { return true }
+          if (name_to_match.indexOf(split) === 0 || name_to_match.indexOf(" " + split) !== -1) { return true }
         })
       })
     }

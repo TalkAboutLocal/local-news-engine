@@ -79,7 +79,7 @@ function search(query) {
       var text_search_found = text.some(function(string) {
         return string.every(function(split) {
           var text_to_match = item._all_text
-          if (text_to_match.indexOf(split) !== -1) { return true }
+          if (text_to_match.indexOf(split) === 0 || text_to_match.indexOf(" " + split) !== -1) { return true }
         })
       })
     } else {
@@ -152,7 +152,7 @@ $(function () {
     $("#main").append(res)
 
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
-      var res = nunjucks.render('appearance.html', {"appearance": results[i], "key_fields": key_fields});
+      var res = nunjucks.render('appearance.html', {"appearance": results[i], "key_fields": key_fields, "index": i});
       $("#main").append(res)
     }
 
