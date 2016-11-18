@@ -1,0 +1,43 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+     <h4><b>{{appearance._source}}</b> {% if appearance._recency %} {{ appearance._recency.substring(0,10) }}{% endif %}</h4>
+  </div>
+  <div class="panel-body">
+	  <h4 class="text-muted"><b>Key fields</b></h4>
+    <dl class="dl-horizontal">
+      {% for term in key_fields|sort %}
+        {% if appearance[term] %}
+          <dt>{{term}}</dt> 
+          <dd>
+            {% set definition_string = appearance[term]|string %}
+            {% if definition_string and definition_string.substring(0,4) == 'http' %}
+              <a href="{{appearance[term]}}">{{appearance[term]}}</a>
+            {% else %}
+              {{appearance[term]}}
+            {% endif %}
+          </dd>
+        {% endif %}
+      {% endfor %}
+    </dl>
+    <div class="col-md-12">
+      <a data-toggle="collapse" href="#full_record_{{index}}" aria-expanded="false" aria-controls="collapseExample">
+      <b>Full record</b></a>
+      <dl class="dl-horizontal collapse full_record" id="full_record_{{index}}">
+
+        {% for term, definition in appearance|dictsort %}
+          {% if term[0] != "_" and term != "Done" and definition %}
+            <dt>{{term}}</dt> 
+             <dd>
+               {% set definition_string = definition|string %}
+               {% if definition_string and definition_string.substring(0,4) == 'http' %}
+                 <a href="{{definition}}">{{definition}}</a>
+               {% else %}
+                 {{definition}}
+               {% endif %}
+             </dd>
+          {% endif %}
+        {% endfor %}
+      </dl>
+    </div>
+  </div>
+</div>

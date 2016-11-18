@@ -1,0 +1,33 @@
+<div class="panel panel-default overflow">
+  <div class="panel-body">
+    <form id="filter-form">
+
+      <h3 class="heading-in-panel">Wards</h3>
+      <div id="wards">
+        <select name="wards" class="selectpicker" multiple data-width="100%" data-live-search="true" data-actions-box="true">
+          {% for ward, count in ward_counter | dictsort %}
+            <option {% if fragment_obj.wards and fragment_obj.wards.indexOf(ward) != -1 %}selected{% endif %} value="{{ward}}" data-subtext="{{count}}">
+              {{ward}}
+            </input>
+          {% endfor %}
+        </select>
+      </div>
+      <h3>Sources</h3>
+      <div id="sources">
+        {% for source, count in source_counter | dictsort %}
+          <div class="checkbox">
+            <label class="checkbox-large-label">
+              <input class="source-checkbox" name="sources" type="checkbox" {% if fragment_obj.sources and fragment_obj.sources.indexOf(source) != -1 %}checked{% endif %} value="{{source}}">
+                {{source}}
+              </input>
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+      <h3>Text Search</h3>
+        <input id="text-search" type="text" class="form-control" placeholder="Search for Text" value="{{fragment_obj.text_search or ''}}">
+        <span id="clear-text-search" class="glyphicon glyphicon-remove-circle"></span>
+
+    </form>
+  </div>
+</div>
