@@ -5,6 +5,7 @@ import nltk
 import json
 import calendar
 import argparse
+import datetime
 import dateutil.parser
 import lxml.html as html
 from collections import defaultdict
@@ -123,6 +124,10 @@ for fname in glob.glob(args.inputdir+'/**', recursive=True):
                 pass
         else:
             print('No date found on {}'.format(fname))
+
+        # Ignore dates in the future
+        if date and date.date() > datetime.date.today():
+            date = None
 
         i += 1
         for name in extract_entity_names_from_text(text):
