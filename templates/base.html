@@ -70,6 +70,7 @@
       // Turn off link tracking for now, as it leaks the url
       //_paq.push(['enableLinkTracking']);
       _paq.push(['setCustomDimension', customDimensionId=4, customDimensionValue='{{ date }}']);
+      _paq.push(['setCustomDimension', customDimensionId=5, customDimensionValue='{{ version }}']);
       {% block extrapiwik %}{% endblock %}
       // Note: A lot of events happen in the names.html rerender function instead of here
       (function() {
