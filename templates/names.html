@@ -262,6 +262,8 @@ $(function () {
     } else {
         var sources_slug = '_';
     }
+    var t2 = performance.now();
+    _paq.push(['setGenerationTimeMs', t2 - t0]);
     _paq.push(['setCustomDimension', customDimensionId=1, customDimensionValue=wards_slug]);
     _paq.push(['setCustomDimension', customDimensionId=2, customDimensionValue=sources_slug]);
     _paq.push(['setCustomDimension', customDimensionId=3, customDimensionValue=search_slug]);
