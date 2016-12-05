@@ -70,7 +70,7 @@ def extract_entity_names_from_text(text):
     tagged_sentences = [nltk.pos_tag(sentence) for sentence in tokenized_sentences]
     chunked_sentences = nltk.ne_chunk_sents(tagged_sentences, binary=True)
     for tree in chunked_sentences:
-        yield from extract_entity_names(tree)
+        return set(extract_entity_names(tree))
 
 
 def write_json(entity_names):
