@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-     <h4><b>{{appearance._source}}</b> {% if appearance._recency %} {{ appearance._recency.substring(0,10) }}{% endif %}</h4>
+     <h4><b>{{appearance._source}}</b> {% if appearance._recency %} {{ appearance._recency|humanDate }}{% endif %}</h4>
   </div>
   <div class="panel-body">
 	  <h4 class="text-muted"><b>Key fields</b></h4>

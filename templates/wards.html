@@ -29,6 +29,11 @@ key_fields = {{key_fields_json|safe}};
 source_counter = {};
 ward_counter = {};
 
+var env = new nunjucks.Environment();
+env.addFilter('humanDate', function(str) {
+  return moment(str).format("- DD MMM YYYY")
+});
+
 var t0 = performance.now();
 
 appearances.forEach(function(appearance) {
@@ -149,11 +154,11 @@ $(function () {
     console.log("Search took " + (t1 - t0) + " milliseconds.");
 
 
-    var res = nunjucks.render('result_header_area.html', {"result_size": results.length, "query": fragment_obj});
+    var res = env.render('result_header_area.html', {"result_size": results.length, "query": fragment_obj});
     $("#main").append(res)
 
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
-      var res = nunjucks.render('appearance.html', {"appearance": results[i], "key_fields": key_fields, "index": i});
+      var res = env.render('appearance.html', {"appearance": results[i], "key_fields": key_fields, "index": i});
       $("#main").append(res)
     }
 
@@ -168,13 +173,14 @@ $(function () {
       context.next_url = URI('#').fragment(fragment_obj).toString()
     }
 
-    var res = nunjucks.render('pager.html', context);
+    var res = env.render('pager.html', context);
     $("#main").append(res)
+    $(".main-spinner").hide()
 
   }
 
   var fragment_obj = get_fragment_obj()
-  var res = nunjucks.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
+  var res = env.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
   $("#sidebar").append(res)
 
   window.onhashchange = rerender

@@ -25,6 +25,16 @@
               </h5>
             </div>
           {% endfor%}
+          {% for key, value in info.counted_name_source %}
+            <div class="col-md-4">
+              <h5> 
+                <strong>{{key}}</strong> 
+                <span class="margin-left-10">
+                  <a href="#" data-toggle="modal" data-source-type="{{key}}" data-name-index="{{index}}" data-target="#modal-for-name">{{value}}</a>
+                </span>
+              </h5>
+            </div>
+          {% endfor%}
         </div>
       </div>
       <div class="col-md-12">
@@ -39,7 +49,7 @@
       {% endfor %}
       </div>
       <div class="col-md-12">
-        <h4 class="text-muted"><b>Latest Appearance: {{matching[0].source}}</b> {% if matching[0].data._recency %} {{ matching[0].data._recency.substring(0,10) }}{% endif %}</h4>
+        <h4 class="text-muted"><b>Latest Appearance: {{matching[0].source}}</b> {% if matching[0].data._recency %} {{ matching[0].data._recency|humanDate }}{% endif %}</h4>
         <div class="col-md-12">
           <h4 class="text-muted"><b>Key fields</b></h4>
           <dl class="dl-horizontal">
