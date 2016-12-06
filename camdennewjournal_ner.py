@@ -18,7 +18,7 @@ Mirror the site with wget (warning this will take hours):
 ```
 # Remove any files that already exist
 rm -r data/www.camdennewjournal.com
-time wget -m "http://www.camdennewjournal.com/" -X sites -P data --restrict-file-names=nocontrol --accept-regex='^http://www.camdennewjournal.com/[^/]*[^\?]*$' 2> data/wget.log
+time wget -m "http://www.camdennewjournal.com/" -X sites -P data --restrict-file-names=nocontrol --adjust-extension --accept-regex='^http://www.camdennewjournal.com/[^/]*[^\?]*$' 2> data/wget.log
 ```
 
 -X sites
@@ -27,6 +27,9 @@ time wget -m "http://www.camdennewjournal.com/" -X sites -P data --restrict-file
     Place the downloaded files in the data/ directory
 --restrict-file-names=nocontrol
     We need this for wget to save UTF-8 filenames properly
+--adjust-extension
+    Add a file extension so that file and directory names don't clash
+    https://github.com/TalkAboutLocal/local-news-engine/issues/68
 --accept-regex
     This has a regex to allow http://www.camdennewjournal.com/news?page=1 but not http://www.camdennewjournal.com/news/thisshouldreally404?page=1
 
@@ -39,7 +42,7 @@ Running for islingtontribune.com:
 ```
 # Remove any files that already exist
 rm -r data/www.islingtontribune.com
-time wget -m "http://www.islingtontribune.com/" -X sites -P data --restrict-file-names=nocontrol --accept-regex='^http://www.islingtontribune.com/[^/]*[^\?]*$' 2> data/wget_islingtontribune.log
+time wget -m "http://www.islingtontribune.com/" -X sites -P data --restrict-file-names=nocontrol --adjust-extension --accept-regex='^http://www.islingtontribune.com/[^/]*[^\?]*$' 2> data/wget_islingtontribune.log
 ```
 
 Then run ``python camdennewjournal_ner.py --inputdir ./data/www.islingtontribune.com --output data/saved_islingtontribune_entities.json``.
@@ -132,7 +135,7 @@ for fname in glob.glob(args.inputdir+'/**', recursive=True):
         i += 1
         for name in extract_entity_names_from_text(text):
             entity_names[name].append({
-                'link': fname.replace('./data/', 'http://'),
+                'link': fname.replace('.html', '').replace('./data/', 'http://'),
                 '_recency': date.isoformat() if date else None
             })
         if i % 1000 == 0:
