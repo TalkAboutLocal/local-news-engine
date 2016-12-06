@@ -1,7 +1,11 @@
 <div class="panel panel-default">
-  <div class="panel-heading"><h5><b> <a href="#" data-toggle="modal" data-source-type="All" data-name-index="{{index}}" data-target="#modal-for-name">  {{ name|title }}  </a></b> {% if info.fuzzy_names|length %} 
-    <span class="text-danger margin-left-10"> Matched Names: </span> {{info.fuzzy_names|join(", ")|title}}   {% endif %} </h5>
-
+  <div class="panel-heading"><h5>
+    {% if info.fuzzy_names|length %}
+      <span class="text-danger margin-left-10"> Matched Names: </span> 
+      <b> <a href="#" data-toggle="modal" data-source-type="All" data-name-index="{{index}}" data-target="#modal-for-name"> {{ name|title }}, {{info.fuzzy_names|join(", ")|title}} </a> <b/>
+    {% else %}
+      <b> <a href="#" data-toggle="modal" data-source-type="All" data-name-index="{{index}}" data-target="#modal-for-name"> {{ name|title }} </a> </b>   
+    {% endif %}
   </div>
   <div class="panel-body">
     <div class="row">
