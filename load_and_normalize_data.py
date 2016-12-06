@@ -178,6 +178,8 @@ def load_islington_planning_data():
         row["_source"] = "Islington Planning"
         row["_source_type"] = "Planning"
 
+        row["href"] = "http://planning.islington.gov.uk/Northgate/PlanningExplorer/Generic/" + row["href"] 
+
         applicant_name = row.get('Applicant')
         if applicant_name:
             row["_names"] = [clean_name(applicant_name)]
@@ -217,6 +219,8 @@ def load_islington_license_data():
         row["_source"] = "Islington License"
         row["_source_type"] = "License"
         row["_wards"] = find_wards(row['_postcodes'])
+
+        row["href"] = "http://planning.islington.gov.uk/Northgate/Online/EGov/License_Registers/" + row["href"] 
 
         applicant_name = row.get('Applicant')
         if applicant_name:
