@@ -187,6 +187,11 @@ function get_fragment_obj () {
 
 
 $(function () {
+  // Track the initial page generation time
+  _paq.push(['setGenerationTimeMs', t1 - t0]);
+  // Track a fake url for this page in piwik
+  _paq.push(['setCustomUrl', 'local://names.html_initial/']);
+  _paq.push(['trackPageView']);
   var rerender = function() {
     var fragment_obj = get_fragment_obj()
     if (Object.keys(fragment_obj).length === 0) {
@@ -262,6 +267,8 @@ $(function () {
     } else {
         var sources_slug = '_';
     }
+    var t2 = performance.now();
+    _paq.push(['setGenerationTimeMs', t2 - t0]);
     _paq.push(['setCustomDimension', customDimensionId=1, customDimensionValue=wards_slug]);
     _paq.push(['setCustomDimension', customDimensionId=2, customDimensionValue=sources_slug]);
     _paq.push(['setCustomDimension', customDimensionId=3, customDimensionValue=search_slug]);

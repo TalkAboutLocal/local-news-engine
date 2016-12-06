@@ -1,7 +1,15 @@
 from jinja2 import Environment, FileSystemLoader 
 import datetime
 import json
+import sys
 env = Environment(loader=FileSystemLoader('templates'), autoescape=True)
+
+if len(sys.argv) > 1:
+    version = sys.argv[1]
+else:
+    print('No version was specified on the commandline, piwik tracking may not work as intended.')
+    version = ''
+
 
 names_template = env.get_template('names.html')
 area_template = env.get_template('areas.html')
@@ -21,6 +29,7 @@ with open('output/areas.html', 'w+') as name_output:
         templates=templates,
         area_matches=area_matches,
         date=datetime.date.today().isoformat(),
+        version=version,
     ))
 
 with open('output/wards.html', 'w+') as ward_output, open("key_field_names.txt") as key_field_names_file:
@@ -30,6 +39,7 @@ with open('output/wards.html', 'w+') as ward_output, open("key_field_names.txt")
         appearances=json.dumps(all_data),
         key_fields_json=json.dumps(key_fields),
         date=datetime.date.today().isoformat(),
+        version=version,
     ))
 
 with open("processed/interesting_names.json") as interesting_names_file:
@@ -43,5 +53,6 @@ with open('output/names.html', 'w+') as name_output, open("key_field_names.txt")
         interesting_names_json=json.dumps(interesting_names),
         date=datetime.date.today().isoformat(),
         key_fields_json=json.dumps(key_fields),
+        version=version,
     ))
 
