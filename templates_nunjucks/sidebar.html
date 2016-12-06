@@ -2,7 +2,21 @@
   <div class="panel-body">
     <form id="filter-form">
 
-      <h3 class="heading-in-panel">Sources</h3>
+      <h3 class="heading-in-panel">Name list<br><small>Select one or more</small></h3>
+
+      <div id="sources">
+        {% for source, count in name_source_counter | dictsort %}
+          <div class="checkbox">
+            <label class="checkbox-large-label">
+              <input class="name-source-checkbox" name="name_sources" type="checkbox" {% if fragment_obj.name_sources and fragment_obj.name_sources.indexOf(source) != -1 %}checked{% endif %} value="{{source}}">
+                {{source}}
+              </input>
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+
+      <h3>Sources<br><small>Select one or more</small></h3>
       <div id="sources">
         {% for source, count in source_counter | dictsort %}
           <div class="checkbox">

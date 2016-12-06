@@ -25,7 +25,7 @@
       <dl class="dl-horizontal collapse full_record" id="full_record_{{index}}">
 
         {% for term, definition in appearance|dictsort %}
-          {% if term[0] != "_" and term != "Done" and definition %}
+          {% if term[0] != "_" and term != "Done" and definition and key_fields.indexOf(term) == -1 %}
             <dt>{{term}}</dt> 
              <dd>
                {% set definition_string = definition|string %}

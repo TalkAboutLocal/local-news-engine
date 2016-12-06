@@ -122,7 +122,7 @@ $(function () {
   var rerender = function() {
     var fragment_obj = get_fragment_obj()
     if (Object.keys(fragment_obj).length === 0) {
-      var res = nunjucks.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
+      var res = env.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
       $("#sidebar").empty(res)
       $("#sidebar").append(res)
       $('.selectpicker').selectpicker('render');
