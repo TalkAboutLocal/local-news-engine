@@ -78,8 +78,8 @@
           <dl class="dl-horizontal collapse full_record" id="full_record_{{index}}">
 
             {% for term, definition in matching[0].data|dictsort %}
-              {% if term[0] != "_" and term != "Done" and definition %}
-                <dt>{{term}}</dt> 
+              {% if term[0] != "_" and term != "Done" and definition and key_fields.indexOf(term) == -1 %}
+                <dt>{{term}}</dt>
                  <dd>
                    {% set definition_string = definition|string %}
                    {% if definition_string and definition_string.substring(0,4) == 'http' %}
