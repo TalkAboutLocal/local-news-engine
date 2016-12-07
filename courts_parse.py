@@ -10,7 +10,7 @@ offence_code = p.Combine(p.Word(p.alphas, exact=2) + p.Word(p.nums, min=3)) + p.
 
 printed_by_line = p.Group(p.LineStart() + p.Literal("Printed By") + p.SkipTo(p.Literal("Page No.:")) + p.SkipTo(p.LineEnd())).setResultsName("printed_by")
 
-first_case_line = p.Group(p.LineStart() + p.NotAny(p.White()) + p.Word(p.nums) + p.SkipTo(p.LineEnd())).setResultsName("first_case_line")
+first_case_line = p.Group(p.LineStart() + p.NotAny(p.White()) + p.Word(p.nums) + p.Optional(p.Suppress(p.Literal("*"))) + p.SkipTo(p.LineEnd())).setResultsName("first_case_line")
 
 heading_block = p.Group(p.SkipTo(p.LineStart() + p.NotAny(p.White()) + p.Literal("Block:")) + p.SkipTo(p.LineEnd())).setResultsName("heading_block")
 
@@ -107,7 +107,7 @@ def parse_first_case_line(first_case_line):
 
 def parse_rest_case_data(rest_case_data):
     data = {}
-    listing = p.Suppress(p.Literal("(")) + p.Word(p.alphanums).setResultsName("listing") + p.Suppress(p.Literal("Listing)"))
+    listing = p.Optional(p.Suppress(p.Literal("(")) + p.Word(p.alphanums).setResultsName("listing") + p.Suppress(p.Literal("Listing)")))
     additional_info = p.And([
         p.SkipTo(p.Literal(": ")),
         p.Suppress(p.Literal(": ")),

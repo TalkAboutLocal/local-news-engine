@@ -7,4 +7,6 @@ nltk
 numpy
 Jinja2
 python-dateutil
+pytest
+selenium==2.53.6
 

@@ -125,6 +125,11 @@ function get_fragment_obj () {
 
 
 $(function () {
+  // Track the initial page generation time
+  _paq.push(['setGenerationTimeMs', t1 - t0]);
+  // Track a fake url for this page in piwik
+  _paq.push(['setCustomUrl', 'local://wards.html_initial/']);
+  _paq.push(['trackPageView']);
   var rerender = function() {
     var fragment_obj = get_fragment_obj()
     if (Object.keys(fragment_obj).length === 0) {
@@ -177,6 +182,31 @@ $(function () {
     $("#main").append(res)
     $(".main-spinner").hide()
 
+
+    // Track this search results render as a page view in Piwik
+    if (fragment_obj.text_search) {
+        var search_slug = 'text_search';
+    } else {
+        var search_slug = 'nosearch';
+    }
+    if (fragment_obj.wards) {
+        var wards_slug = fragment_obj.wards.join();
+    } else {
+        var wards_slug = '_';
+    }
+    if (fragment_obj.sources) {
+        var sources_slug = fragment_obj.sources.join();
+    } else {
+        var sources_slug = '_';
+    }
+    var t2 = performance.now();
+    _paq.push(['setGenerationTimeMs', t2 - t0]);
+    _paq.push(['setCustomDimension', customDimensionId=1, customDimensionValue=wards_slug]);
+    _paq.push(['setCustomDimension', customDimensionId=2, customDimensionValue=sources_slug]);
+    _paq.push(['setCustomDimension', customDimensionId=3, customDimensionValue=search_slug]);
+    // Track a fake url for this page in piwik
+    _paq.push(['setCustomUrl', 'local://wards.html/' + search_slug + '/' + wards_slug + '/' + sources_slug + '/page=' + current_page]);
+    _paq.push(['trackPageView']);
   }
 
   var fragment_obj = get_fragment_obj()
@@ -186,6 +216,14 @@ $(function () {
   window.onhashchange = rerender
   rerender()
 
+
+  // Track full record show/hide events for Piwik
+  $('.full_record').on('show.bs.collapse', function (event) {
+    _paq.push(['trackEvent', 'full_record', 'show'])
+  })
+  $('.full_record').on('hide.bs.collapse', function (event) {
+    _paq.push(['trackEvent', 'full_record', 'hide'])
+  })
 
   $('.container').on('change', '.source-checkbox' , function (event) {
     var new_source_values = []
