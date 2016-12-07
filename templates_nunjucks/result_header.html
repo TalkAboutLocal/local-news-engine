@@ -1,0 +1,9 @@
+
+
+{%if not query.sources%}
+<h4 class="heading-in-panel"> Please choose sources on the left. </h4>
+{% elif not result_size %}
+<h4 class="heading-in-panel"> No Result </h4>
+{% else %}
+<h4 class="heading-in-panel"> Matches {{ result_size }} </h4>
+{%endif%}

@@ -114,10 +114,14 @@ def load_camden_license_data():
     camden_license_list = list(camden_license_data.values())
 
     for row in camden_license_list:
+        for item in list(row):
+            value = row.pop(item)
+            row[item.rstrip(":")] = value
+
         row['_postcodes'] = set()
         row["_postcode_districts"] = set()
 
-        address = row.get('Premises address:')
+        address = row.get('Premises address')
         if address:
             postcodes = find_postcodes(address)
             for item in postcodes:
@@ -131,7 +135,7 @@ def load_camden_license_data():
         row["_source_type"] = "License"
 
         row["_names"] = set()
-        for key in ('Applicant:', 'Correspondant:', 'Director:', 'Employee:'):
+        for key in ('Applicant', 'Correspondant', 'Director', 'Employee'):
             name = row.get(key)
             if name:
                 row["_names"].add(clean_name(name.replace('  ',' ')))
@@ -254,13 +258,13 @@ def load_will_people(all_names):
         for source, name in will_people_of_interest:
             all_names[clean_name(name)].append({"source": source, "source_type": "Name", "data": {}})
 
-def load_camden_journal_data(all_names):
-    with open('data/saved_camdennewjournal_entities.json') as camden_journal:
-        camden_journal_data = json.load(camden_journal)
+def load_entities_data(all_names, source_filename, source_name):
+    with open(source_filename) as entities:
+        entities_data = json.load(entities)
 
-    for key, value in camden_journal_data.items():
+    for key, value in entities_data.items():
         for data in value:
-            all_names[clean_name(key)].append({"source": "Camden New Journal", 
+            all_names[clean_name(key)].append({"source": source_name,
                                                "source_type": "Name",
                                                "data": data})
 
@@ -282,7 +286,8 @@ islington_license_data = load_islington_license_data()
 all_data = courts_data + camden_planning_data + camden_license_data + islington_planning_data + islington_license_data 
 
 all_names = defaultdict(list)
-load_camden_journal_data(all_names)
+load_entities_data(all_names, 'data/saved_camdennewjournal_entities.json', 'Camden New Journal')
+load_entities_data(all_names, 'data/saved_islingtontribune_entities.json', 'Islington Tribune')
 load_will_people(all_names)
 load_rest_people(all_names, all_data)
 
