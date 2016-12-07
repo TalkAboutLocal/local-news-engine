@@ -1,0 +1,66 @@
+[
+    {
+        "Applicant": "A M Person",
+        "\u00a0": "",
+        "\r\n\t  Expiry\r\n\t": "Consultation Period Closed",
+        "Licence Type": "Temporary Event Notice",
+        "Location/Name": null,
+        "Done": true,
+        "Status": [
+            "Current Issue",
+            "Standard TEN Issued"
+        ],
+        "href": "somelink",
+        "Licence for": "Some Place, Islington, London",
+        "License Type": "Temporary Event Notice",
+        "Licence Date": "27th February 2011"
+    },
+    {
+        "Applicant": "A M Person",
+        "\u00a0": "",
+        "\r\n\t  Expiry\r\n\t": "Consultation Period Closed",
+        "Licence Type": "Temporary Event Notice",
+        "Location/Name": null,
+        "Done": true,
+        "Status": [
+            "Current Issue",
+            "Standard TEN Issued"
+        ],
+        "href": "somelink",
+        "Licence for": "Some Place, Islington, London",
+        "License Type": "Temporary Event Notice",
+        "Licence Date": "27th February 2007"
+    },
+    {
+        "Applicant": "A M Person",
+        "\u00a0": "",
+        "\r\n\t  Expiry\r\n\t": "Consultation Period Closed",
+        "Licence Type": "Temporary Event Notice",
+        "Location/Name": null,
+        "Done": true,
+        "Status": [
+            "Current Issue",
+            "Standard TEN Issued"
+        ],
+        "href": "somelink",
+        "Licence for": "Some Place, Islington, London",
+        "License Type": "Temporary Event Notice",
+        "Licence Date": "27th February 2016"
+    },
+    {
+        "Applicant": "A M Person",
+        "\u00a0": "",
+        "\r\n\t  Expiry\r\n\t": "Consultation Period Closed",
+        "Licence Type": "Temporary Event Notice",
+        "Location/Name": null,
+        "Done": true,
+        "Status": [
+            "Current Issue",
+            "Standard TEN Issued"
+        ],
+        "href": "somelink",
+        "Licence for": "Some Place, Islington, London",
+        "License Type": "Temporary Event Notice",
+        "Licence Date": "21st January 2012"
+    }
+]
