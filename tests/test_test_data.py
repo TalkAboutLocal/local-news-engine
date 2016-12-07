@@ -15,8 +15,11 @@ def browser(request):
 def test_1_match(browser):
     browser.get('file://' + os.path.abspath('./output/names.html'))
     # There should be not matches in the default results
-    assert 'Matches 1' not in browser.find_element_by_tag_name('body').text
-    # Click on one of the sources, and there should be a match
+    assert 'Matches' not in browser.find_element_by_tag_name('body').text
+    # Click on one of the names sources and another source,
+    # and there should be a match
+    browser.find_element_by_name('name_sources').click()
+    assert 'Matches' not in browser.find_element_by_tag_name('body').text
     browser.find_element_by_name('sources').click()
     assert 'Matches 1' in browser.find_element_by_tag_name('body').text
 
