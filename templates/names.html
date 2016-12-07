@@ -252,8 +252,13 @@ $(function () {
     $("#main").append(res)
 
 
-    if (fragment_obj.name_search) {
-        var search_slug = 'search';
+    // Track this search results render as a page view in PIwik
+    if (fragment_obj.name_search && fragment_obj.text_search) {
+        var search_slug = 'name_and_text_search';
+    } else if (fragment_obj.name_search) {
+        var search_slug = 'name_search';
+    } else if (fragment_obj.text_search) {
+        var search_slug = 'text_search';
     } else {
         var search_slug = 'nosearch';
     }
@@ -296,6 +301,7 @@ $(function () {
                                                   "key_fields": key_fields,
                                                   "source_type": source_type});
     modal.find('.modal-content')[0].innerHTML = res
+  // Track modal and full record show/hide events for Piwik
     _paq.push(['trackEvent', 'modal', 'show'])
   })
   $('#modal-for-name').on('hide.bs.modal', function (event) {
