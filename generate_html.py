@@ -11,9 +11,9 @@ else:
     version = ''
 
 
-names_template = env.get_template('names.html')
+names_template = env.get_template('leads.html')
 area_template = env.get_template('areas.html')
-wards_template = env.get_template('wards.html')
+wards_template = env.get_template('explore.html')
 
 with open("output/templates.js") as templatesjs:
     templates = templatesjs.read()
@@ -32,7 +32,7 @@ with open('output/areas.html', 'w+') as name_output:
         version=version,
     ))
 
-with open('output/wards.html', 'w+') as ward_output, open("key_field_names.txt") as key_field_names_file:
+with open('output/explore.html', 'w+') as ward_output, open("key_field_names.txt") as key_field_names_file:
     key_fields = list(set([key_field_name.strip() for key_field_name in key_field_names_file]))
     ward_output.write(wards_template.render(
         templates=templates,
@@ -45,7 +45,7 @@ with open('output/wards.html', 'w+') as ward_output, open("key_field_names.txt")
 with open("processed/interesting_names.json") as interesting_names_file:
     interesting_names = json.load(interesting_names_file)
 
-with open('output/names.html', 'w+') as name_output, open("key_field_names.txt") as key_field_names_file:
+with open('output/leads.html', 'w+') as name_output, open("key_field_names.txt") as key_field_names_file:
     key_fields = list(set([key_field_name.strip() for key_field_name in key_field_names_file]))
     name_output.write(names_template.render(
         templates=templates,
