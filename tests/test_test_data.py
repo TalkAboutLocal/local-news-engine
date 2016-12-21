@@ -13,7 +13,7 @@ def browser(request):
 
 
 def test_1_match(browser):
-    browser.get('file://' + os.path.abspath('./output/names.html'))
+    browser.get('file://' + os.path.abspath('./output/leads.html'))
     # There should be not matches in the default results
     assert 'Matches' not in browser.find_element_by_tag_name('body').text
     # Click on one of the names sources and another source,
@@ -25,7 +25,7 @@ def test_1_match(browser):
 
 
 def test_wards_file(browser):
-    browser.get('file://' + os.path.abspath('./output/wards.html'))
+    browser.get('file://' + os.path.abspath('./output/explore.html'))
     assert 'Matches 11' in browser.find_element_by_tag_name('body').text
     browser.find_element_by_name('sources').click()
     assert 'Matches 2' in browser.find_element_by_tag_name('body').text
