@@ -22,8 +22,9 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container" style='clear:both'>
   <div class="row">
+    <div class='main-spinner uil-default-css' style='transform:scale(0.6); margin:auto'><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(90deg) translate(0,-60px);transform:rotate(90deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(120deg) translate(0,-60px);transform:rotate(120deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(150deg) translate(0,-60px);transform:rotate(150deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(180deg) translate(0,-60px);transform:rotate(180deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(210deg) translate(0,-60px);transform:rotate(210deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(240deg) translate(0,-60px);transform:rotate(240deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'></div></div>
     <div class="col-xs-4" id="sidebar">
     </div>
     <div class="col-xs-8" id="main">
@@ -50,7 +51,13 @@ PAGE_SIZE = 50
 interesting_names = {{interesting_names_json|safe}};
 key_fields = {{key_fields_json|safe}};
 source_counter = {};
+name_source_counter = {};
 ward_counter = {};
+
+var env = new nunjucks.Environment();
+env.addFilter('humanDate', function(str) {
+  return moment(str).format("- DD MMM YYYY")
+});
 
 var t0 = performance.now();
 
@@ -60,6 +67,12 @@ interesting_names.forEach(function(item) {
       source_counter[source] = 0;
     }
     source_counter[source] += 1;
+  })
+  Object.keys(item[3].counted_name_source).some(function(source) {
+    if (!name_source_counter[source]) {
+      name_source_counter[source] = 0;
+    }
+    name_source_counter[source] += 1;
   })
   item[3].wards = {}
   item[2].forEach(function(appearance) {
@@ -88,6 +101,7 @@ console.log("Summary took " + (t1 - t0) + " milliseconds.")
 function name_search(query) {
   var results = [];
   var sources = query.sources || [];
+  var name_sources = query.name_sources || [];
   var wards = query.wards || [];
   var text_search = query.text_search || ""
   var name_search = query.name_search || "";
@@ -111,16 +125,16 @@ function name_search(query) {
   interesting_names.some(function(item, index) {
     var new_item = item.slice()
 
-    var matching_sources = 0
-    Object.keys(item[3].counted_source).forEach(function(source) {
+    var in_sources = Object.keys(item[3].counted_source).some(function(source) {
       if (sources.indexOf(source) !== -1) {
-        matching_sources += 1
+         return true
       }
     })
-    var in_sources = false
-    if (matching_sources > 1 || (matching_sources === 1 && sources.length === 1)) {
-        in_sources = true
-    }
+    var in_name_sources = Object.keys(item[3].counted_name_source).some(function(source) {
+      if (name_sources.indexOf(source) !== -1) {
+         return true
+      }
+    })
 
     var matching_appearances = item[2].filter(function(appearance) {
       var appearance_wards = appearance.data._wards || []
@@ -143,7 +157,7 @@ function name_search(query) {
         appreance_in_wards = true
       }
       if (appreance_in_wards &&
-          sources.indexOf(appearance.source) !== -1 &&
+          (sources.indexOf(appearance.source) !== -1 || name_sources.indexOf(appearance.source) !== -1) &&
           text_search_found) {
         return true
       }
@@ -162,7 +176,7 @@ function name_search(query) {
       })
     }
 
-    if (in_sources && name_found && matching_appearances.length >= 1) {
+    if (in_sources && in_name_sources && name_found && matching_appearances.length >= 1) {
       item[3].index = index
       results.push(new_item)
     }
@@ -195,7 +209,7 @@ $(function () {
   var rerender = function() {
     var fragment_obj = get_fragment_obj()
     if (Object.keys(fragment_obj).length === 0) {
-      var res = nunjucks.render('sidebar.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
+      var res = env.render('sidebar.html', {"name_source_counter": name_source_counter, "source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
       $("#sidebar").empty(res)
       $("#sidebar").append(res)
       $('.selectpicker').selectpicker('render');
@@ -229,11 +243,11 @@ $(function () {
     console.log("Search took " + (t1 - t0) + " milliseconds.");
 
 
-    var res = nunjucks.render('result_header.html', {"result_size": results.length, "query": fragment_obj});
+    var res = env.render('result_header.html', {"result_size": results.length, "query": fragment_obj});
     $("#main").append(res)
 
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
-      var res = nunjucks.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index, "key_fields": key_fields, "matching": results[i][4]});
+      var res = env.render('name.html', {"name": results[i][1], "values": results[i][2], "info": results[i][3], "index": results[i][3].index, "key_fields": key_fields, "matching": results[i][4]});
       $("#main").append(res)
     }
 
@@ -248,8 +262,9 @@ $(function () {
       context.next_url = URI('#').fragment(fragment_obj).toString()
     }
 
-    var res = nunjucks.render('pager.html', context);
+    var res = env.render('pager.html', context);
     $("#main").append(res)
+    $(".main-spinner").hide()
 
 
     // Track this search results render as a page view in PIwik
@@ -283,7 +298,7 @@ $(function () {
   }
 
   var fragment_obj = get_fragment_obj()
-  var res = nunjucks.render('sidebar.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
+  var res = env.render('sidebar.html', {"name_source_counter": name_source_counter, "source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
   $("#sidebar").append(res)
 
   window.onhashchange = rerender
@@ -295,7 +310,7 @@ $(function () {
     var name_index = link.data('name-index') // Extract info from data-* attributes
     var source_type = link.data('source-type') // Extract info from data-* attributes
     var modal = $(this)
-    var res = nunjucks.render('name_modal.html', {"name": interesting_names[name_index][1], 
+    var res = env.render('name_modal.html', {"name": interesting_names[name_index][1], 
                                                   "values": interesting_names[name_index][2], 
                                                   "info": interesting_names[name_index][3],
                                                   "key_fields": key_fields,
@@ -324,6 +339,20 @@ $(function () {
     })
     var fragment_obj = get_fragment_obj()
     fragment_obj.sources = new_source_values
+    fragment_obj.page = 0
+    var uri = URI('#').fragment(fragment_obj).toString();
+    window.location.hash = uri
+  })
+
+  $('.container').on('change', '.name-source-checkbox' , function (event) {
+    var new_source_values = []
+    $('#filter-form').serializeArray().forEach(function (item) {
+      if (item.name == "name_sources") {
+         new_source_values.push(item.value)
+      }
+    })
+    var fragment_obj = get_fragment_obj()
+    fragment_obj.name_sources = new_source_values
     fragment_obj.page = 0
     var uri = URI('#').fragment(fragment_obj).toString();
     window.location.hash = uri

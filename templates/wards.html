@@ -8,6 +8,7 @@
 </nav>
 
 <div class="container">
+    <div class='main-spinner uil-default-css' style='transform:scale(0.6); margin:auto'><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(90deg) translate(0,-60px);transform:rotate(90deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(120deg) translate(0,-60px);transform:rotate(120deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(150deg) translate(0,-60px);transform:rotate(150deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(180deg) translate(0,-60px);transform:rotate(180deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(210deg) translate(0,-60px);transform:rotate(210deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(240deg) translate(0,-60px);transform:rotate(240deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#cec9c9;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'></div></div>
   <div class="row">
     <div class="col-xs-4" id="sidebar">
     </div>
@@ -27,6 +28,11 @@ appearances = {{appearances|safe}};
 key_fields = {{key_fields_json|safe}};
 source_counter = {};
 ward_counter = {};
+
+var env = new nunjucks.Environment();
+env.addFilter('humanDate', function(str) {
+  return moment(str).format("- DD MMM YYYY")
+});
 
 var t0 = performance.now();
 
@@ -127,7 +133,7 @@ $(function () {
   var rerender = function() {
     var fragment_obj = get_fragment_obj()
     if (Object.keys(fragment_obj).length === 0) {
-      var res = nunjucks.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
+      var res = env.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
       $("#sidebar").empty(res)
       $("#sidebar").append(res)
       $('.selectpicker').selectpicker('render');
@@ -153,11 +159,11 @@ $(function () {
     console.log("Search took " + (t1 - t0) + " milliseconds.");
 
 
-    var res = nunjucks.render('result_header_area.html', {"result_size": results.length, "query": fragment_obj});
+    var res = env.render('result_header_area.html', {"result_size": results.length, "query": fragment_obj});
     $("#main").append(res)
 
     for (var i = current_page*50; i < Math.min(current_page*50 + 50, results.length)  ; i++) {
-      var res = nunjucks.render('appearance.html', {"appearance": results[i], "key_fields": key_fields, "index": i});
+      var res = env.render('appearance.html', {"appearance": results[i], "key_fields": key_fields, "index": i});
       $("#main").append(res)
     }
 
@@ -172,8 +178,9 @@ $(function () {
       context.next_url = URI('#').fragment(fragment_obj).toString()
     }
 
-    var res = nunjucks.render('pager.html', context);
+    var res = env.render('pager.html', context);
     $("#main").append(res)
+    $(".main-spinner").hide()
 
 
     // Track this search results render as a page view in Piwik
@@ -203,7 +210,7 @@ $(function () {
   }
 
   var fragment_obj = get_fragment_obj()
-  var res = nunjucks.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
+  var res = env.render('sidebar_area.html', {"source_counter": source_counter, "ward_counter": ward_counter, "fragment_obj": fragment_obj});
   $("#sidebar").append(res)
 
   window.onhashchange = rerender

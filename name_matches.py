@@ -32,9 +32,11 @@ interesting_names = []
 
 
 for key, value in all_names.items():
-    counted_sources = collections.Counter(item["source"] for item in value)
+    counted_sources = collections.Counter(item["source"] for item in value if item["source_type"] != "Name")
+    counted_name_sources = collections.Counter(item["source"] for item in value if item["source_type"] == "Name")
     info = {
         "counted_source": dict(counted_sources),
+        "counted_name_source": dict(counted_name_sources),
         "total_sources": len(value),
         "fuzzy_names": list(set(item['fuzzy_match'] for item in value if 'fuzzy_match' in item))
     }

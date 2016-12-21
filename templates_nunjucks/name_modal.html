@@ -7,7 +7,7 @@
 {% for item in values %}
   {% if source_type == "All" or source_type == item.source %}
   <div class="panel panel-default">
-    <div class="panel-heading"><h4><b>{{item.source}}</b> {% if item.data._recency %} {{ item.data._recency.substring(0,10) }} {% endif %}</h4></div>
+    <div class="panel-heading"><h4><b>{{item.source}}</b> {% if item.data._recency %} {{ item.data._recency|humanDate }} {% endif %}</h4></div>
     <div class="panel-body">
       <dl class="dl-horizontal">
         {% for term, definition in item.data|dictsort %}
