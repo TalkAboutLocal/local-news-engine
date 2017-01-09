@@ -128,7 +128,7 @@ $(function () {
   // Track the initial page generation time
   _paq.push(['setGenerationTimeMs', t1 - t0]);
   // Track a fake url for this page in piwik
-  _paq.push(['setCustomUrl', 'local://wards.html_initial/']);
+  _paq.push(['setCustomUrl', 'local://explore.html_initial/']);
   _paq.push(['trackPageView']);
   var rerender = function() {
     var fragment_obj = get_fragment_obj()
@@ -205,7 +205,7 @@ $(function () {
     _paq.push(['setCustomDimension', customDimensionId=2, customDimensionValue=sources_slug]);
     _paq.push(['setCustomDimension', customDimensionId=3, customDimensionValue=search_slug]);
     // Track a fake url for this page in piwik
-    _paq.push(['setCustomUrl', 'local://wards.html/' + search_slug + '/' + wards_slug + '/' + sources_slug + '/page=' + current_page]);
+    _paq.push(['setCustomUrl', 'local://explore.html/' + search_slug + '/' + wards_slug + '/' + sources_slug + '/page=' + current_page]);
     _paq.push(['trackPageView']);
   }
 
