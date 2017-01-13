@@ -27,6 +27,9 @@ then
   python generate_html.py $version
   mv output/leads.html output/leads_${version}.html
   mv output/explore.html output/explore_${version}.html
+
+  echo "$version: Zipping up..."
+  zip local_news_engine$(date +"%d_%m_%y")_$zipversion.zip output/leads_${version}.html output/explore_${version}.html 
 else 
   echo "Invalid version string specified"
   exit
@@ -41,17 +44,10 @@ source bin/activate
 echo "Compiling templates..."
 node_modules/.bin/nunjucks-precompile templates_nunjucks > output/templates.js
 
-v="courts"
-
-doMatch "courts"
-
-echo '[]' > courts_data/courts.json 
-
-doMatch "noncourts"
-
-echo "Creating .zip archive..."
-zip local_news_engine$(date +"%d_%m_%y").zip output/leads*.html output/explore*.html
-
+for version in {courts,noncourts}; do
+  doMatch $version
+  echo '[]' > courts_data/courts.json 
+done
 
 
 
