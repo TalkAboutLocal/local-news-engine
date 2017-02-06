@@ -28,8 +28,6 @@ def parse_court_docs(data):
     current_page_info = {}
 
     for item in all_results:
-        import pprint
-        pprint.pprint(item)
         if item.getName() == "heading_block":
             current_page_info = parse_heading_block(item)
 
