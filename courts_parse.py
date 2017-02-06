@@ -28,6 +28,8 @@ def parse_court_docs(data):
     current_page_info = {}
 
     for item in all_results:
+        import pprint
+        pprint.pprint(item)
         if item.getName() == "heading_block":
             current_page_info = parse_heading_block(item)
 
@@ -117,7 +119,7 @@ def parse_rest_case_data(rest_case_data):
     rest_case_data_detail = p.And([
         p.SkipTo(listing).setResultsName("address"), 
         listing,
-        p.SkipTo(p.LineStart() + p.Word(p.nums)).setResultsName("additional_info"),
+        p.Optional(p.SkipTo(p.LineStart() + p.Word(p.nums)).setResultsName("additional_info")),
         p.SkipTo(p.StringEnd()).setResultsName("rest_case_data")
     ])
 
