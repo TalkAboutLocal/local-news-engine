@@ -117,7 +117,7 @@ def parse_rest_case_data(rest_case_data):
     rest_case_data_detail = p.And([
         p.SkipTo(listing).setResultsName("address"), 
         listing,
-        p.SkipTo(p.LineStart() + p.Word(p.nums)).setResultsName("additional_info"),
+        p.Optional(p.SkipTo(p.LineStart() + p.Word(p.nums)).setResultsName("additional_info")),
         p.SkipTo(p.StringEnd()).setResultsName("rest_case_data")
     ])
 

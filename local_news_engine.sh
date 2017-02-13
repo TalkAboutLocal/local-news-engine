@@ -29,7 +29,7 @@ then
   mv output/explore.html output/explore_${version}.html
 
   echo "$version: Zipping up..."
-  zip local_news_engine$(date +"%d_%m_%y")_${version}.zip output/leads_${version}.html output/explore_${version}.html 
+  zip local_news_engine$(date +"%d_%m_%y")_${version}.zip output/leads_${version}.html output/explore_${version}.html README.pdf 
 else 
   echo "Invalid version string specified"
   exit
