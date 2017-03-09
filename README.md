@@ -63,7 +63,7 @@ For Camden planning
 
 ```
 cd data
-wget https://opendata.camden.gov.uk/resource/mcgw-i4rx.json
+curl 'https://opendata.camden.gov.uk/resource/mcgw-i4rx.json?$limit=100000' > mcgw-i4rx.json
 cd ..
 ```
 
